@@ -1,0 +1,234 @@
+#!/bin/bash
+# @parseArger-begin
+# @parseArger-help "Proompty get command" --option "help" --short-option "h"
+# @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
+# @parseArger-leftovers leftovers
+# @parseArger-declarations
+# @parseArger pos name "proompt name"
+# @parseArger opt template-file "replace default template file"
+# @parseArger-declarations-end
+
+# @parseArger-utils
+_helpHasBeenPrinted=1;
+_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)";
+# @parseArger-utils-end
+
+# @parseArger-parsing
+
+__cli_arg_count=$#;
+
+die()
+{
+	local _ret="${2:-1}"
+	test "${_PRINT_HELP:-no}" = yes && print_help >&2
+	log "$1" -3 >&2
+	exit "${_ret}"
+}
+
+
+begins_with_short_option()
+{
+	local first_option all_short_options=''
+	first_option="${1:0:1}"
+	test "$all_short_options" = "${all_short_options/$first_option/}" && return 1 || return 0
+}
+
+# POSITIONALS ARGUMENTS
+_positionals=();
+_optional_positionals=();
+_arg_name="";
+# OPTIONALS ARGUMENTS
+_arg_template_file=
+# FLAGS
+# NESTED
+# LEFTOVERS
+_arg_leftovers=()
+_verbose_level="0";
+
+
+
+print_help()
+{
+	_triggerSCHelp=1;
+
+	if [[ "$_helpHasBeenPrinted" == "1" ]]; then
+		_helpHasBeenPrinted=0;
+		echo -e "Proompty get command:"
+	echo -e "	name: proompt name"
+	echo -e "	--template-file <template-file>: replace default template file"
+	echo -e "Usage :
+	$0 <name> [--template-file <value>]";
+	fi
+
+}
+
+log() {
+	local _arg_msg="${1}";
+	local _arg_level="${2:-0}";
+	if [ "${_arg_level}" -le "${_verbose_level}" ]; then
+		case "$_arg_level" in
+			-3)
+				_arg_COLOR="\033[0;31m";
+				;;
+			-2)
+				_arg_COLOR="\033[0;33m";
+				;;
+			-1)
+				_arg_COLOR="\033[1;33m";
+				;;
+			1)
+				_arg_COLOR="\033[0;32m";
+				;;
+			2)
+				_arg_COLOR="\033[1;36m";
+				;;
+			3)
+				_arg_COLOR="\033[0;36m";
+				;;
+			*)
+				_arg_COLOR="\033[0m";
+				;;
+		esac
+		echo -e "${_arg_COLOR}${_arg_msg}\033[0m";
+	fi
+}
+
+parse_commandline()
+{
+	_positionals_count=0
+	while test $# -gt 0
+	do
+		_key="$1"
+		case "$_key" in
+			--template-file)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_template_file="$2"
+				shift
+				;;
+			--template-file=*)
+				_arg_template_file="${_key##--template-file=}"
+				;;
+			
+			-h|--help)
+				print_help;
+				exit 0;
+				;;
+			-h*)
+				print_help;
+				exit 0;
+				;;
+			--verbose)
+					if [ $# -lt 2 ];then
+						_verbose_level="$((_verbose_level + 1))";
+					else
+						_verbose_level="$2";
+						shift;
+					fi
+					;;
+				--quiet)
+					if [ $# -lt 2 ];then
+						_verbose_level="$((_verbose_level - 1))";
+					else
+						_verbose_level="-$2";
+						shift;
+					fi
+					;;
+				
+				*)
+				_last_positional="$1"
+				_positionals+=("$_last_positional")
+				_positionals_count=$((_positionals_count + 1))
+				;;
+		esac
+		shift
+	done
+}
+
+
+handle_passed_args_count()
+{
+	local _required_args_string="name"
+	if [ "${_positionals_count}" -lt 1 ] && [ "$_helpHasBeenPrinted" == "1" ];then
+		_PRINT_HELP=yes die "FATAL ERROR: Not enough positional arguments - we require at least 1 (namely: $_required_args_string), but got only ${_positionals_count}.
+	${_positionals[*]}" 1;
+	fi
+}
+
+
+assign_positional_args()
+{
+	local _positional_name _shift_for=$1;
+	_positional_names="_arg_name ";
+	_leftovers_count=$((${#_positionals[@]} - 1))
+	for ((ii = 0; ii < _leftovers_count; ii++));do
+		_positional_names="$_positional_names _arg_leftovers[$((ii + 0))]";
+	done
+
+	shift "$_shift_for"
+	for _positional_name in ${_positional_names};do
+		test $# -gt 0 || break;
+		if ! [[ "$_positional_name" =~ "_arg_leftovers" ]];then
+			eval "if [ \"\$_one_of${_positional_name}\" != \"\" ];then [[ \"\${_one_of${_positional_name}[*]}\" =~ \"\${1}\" ]];fi" || die "${_positional_name} must be one of: $(eval "echo \"\${_one_of${_positional_name}[*]}\"")" 1;
+		fi
+		eval "$_positional_name=\${1}" || die "Error during argument parsing, possibly an ParseArger bug." 1;
+		shift;
+	done
+}
+
+print_debug()
+{
+	print_help
+	# shellcheck disable=SC2145
+	echo "DEBUG: $0 $@";
+	
+	echo -e "	name: ${_arg_name}";
+	echo -e "	template-file: ${_arg_template_file}";
+	echo -e "	leftovers: ${_arg_leftovers[*]}";
+
+}
+
+
+on_interrupt() {
+	die Process aborted! 130;
+}
+
+
+parse_commandline "$@";
+handle_passed_args_count;
+assign_positional_args 1 "${_positionals[@]}";
+trap on_interrupt INT;
+
+
+
+# @parseArger-parsing-end
+# print_debug "$@"
+# @parseArger-end
+
+# Check if the proompt exists, die if not
+proompt_file="$SCRIPT_DIR/../proomplates/$_arg_name"
+if [ ! -f "$proompt_file" ]; then
+  die "Proompt $_arg_name does not exist."
+fi
+
+# Source the proompt file
+source "$proompt_file"
+
+# Check if the template file exists, die if not
+if [ "$_arg_template_file" = "" ]; then
+  _arg_template_file="$proompt_template"
+fi
+
+if [ ! -f "$_arg_template_file" ]; then
+  die "Template file $_arg_template_file does not exist."
+fi
+
+# Using leftovers to create variables
+for arg in "${_arg_leftovers[@]}"; do
+  eval "$arg"
+done
+
+# Use these variables with the template file
+result=$(envsubst < "$_arg_template_file")
+
+# Echo the result
+echo "$result"

@@ -1,0 +1,155 @@
+#!/bin/bash
+
+# Create the project with parseArger
+parseArger project Proompty "A dumb assistant for organized Proompt inge-near"
+
+# Change to the project directory
+cd ./Proompty
+
+# Create the 'get' script with parseArger
+parseArger parse -i bin/get \
+  --help-message "get a proompt with your options" \
+  --arg 'name "proompt name"' \
+  --opt 'template-file "replace default template file"' \
+  --leftovers
+
+# Concatenate the 'get' script implementation
+cat << 'EOF' >> bin/get
+
+# Check if the proompt exists, die if not
+proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"
+if [ ! -f "$proompt_file" ]; then
+  die "Proompt $_arg_name does not exist."
+fi
+
+# Source the proompt file
+source "$proompt_file"
+
+# Check if the template file exists, die if not
+if [ "$_arg_template_file" = "" ]; then
+  _arg_template_file="$proompt_template"
+fi
+
+if [ ! -f "$_arg_template_file" ]; then
+  die "Template file $_arg_template_file does not exist."
+fi
+
+# Using leftovers to create variables
+for arg in "${_arg_leftovers[@]}"; do
+  eval "$arg"
+done
+
+# Use these variables with the template file
+result=$(envsubst < "$_arg_template_file")
+
+# Echo the result
+echo "$result"
+EOF
+
+# Create the 'list' script with parseArger
+parseArger parse -i bin/list \
+  --help-message "List all available proompts" \
+  --flag 'all "List all proompts including archived ones"' \
+  --opt 'filter "Filter proompts by a keyword"' \
+  --leftovers
+
+# Concatenate the 'list' script implementation
+cat << 'EOF' >> bin/list
+
+# Retrieve list of proompts from the proomplates directory
+proompt_dir="./proomplates"
+proompts=()
+archived_proompts=()
+
+for file in "$proompt_dir"/*; do
+  if [ -f "$file" ]; then
+    proompt_name=$(basename "$file")
+    if [[ "$proompt_name" == *"_archived"* ]]; then
+      archived_proompts+=("$proompt_name")
+    else
+      proompts+=("$proompt_name")
+    fi
+  fi
+done
+
+# Include archived proompts if --all flag is set
+if [ "$_arg_all" = "1" ]; then
+  proompts+=("${archived_proompts[@]}")
+fi
+
+# Filter proompts by the given keyword if --filter option is set
+if [ -n "$_arg_filter" ]; then
+  filtered_proompts=()
+  for proompt in "${proompts[@]}"; do
+    if [[ "$proompt" == *"$_arg_filter"* ]]; then
+      filtered_proompts+=("$proompt")
+    fi
+  done
+  proompts=("${filtered_proompts[@]}")
+fi
+
+# Display the list of available proompts
+echo "Available proompts:"
+for proompt in "${proompts[@]}"; do
+  echo "$proompt"
+done
+
+# Use leftovers for additional processing if needed
+for leftover in "${_arg_leftovers[@]}"; do
+  echo "Leftover argument: $leftover"
+done
+EOF
+
+# Create the 'add' script with parseArger
+parseArger parse -i bin/add \
+  --help-message "Add a new proompt" \
+  --arg 'name "proompt name"' \
+  --opt 'template-file "template file for the proompt"' \
+  --opt 'description "description of the proompt"' \
+  --opt 'tags "tags associated with the proompt" --repeat'
+
+# Concatenate the 'add' script implementation
+cat << 'EOF' >> bin/add
+
+# Check if a proompt with the same name already exists
+proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"
+if [ -f "$proompt_file" ]; then
+  die "Proompt $_arg_name already exists."
+fi
+
+# Create a new proompt file
+echo "# Proompt: $_arg_name" > "$proompt_file"
+echo "proompt_template=$_arg_template_file" >> "$proompt_file"
+
+# Add optional description
+if [ -n "$_arg_description" ]; then
+  echo "proompt_description='$_arg_description'" >> "$proompt_file"
+fi
+
+# Add tags if provided
+if [ "${#_arg_tags[@]}" -gt 0 ]; then
+  echo "proompt_tags=(${_arg_tags[*]})" >> "$proompt_file"
+fi
+
+echo "Proompt $_arg_name has been added."
+EOF
+
+# Create the 'remove' script with parseArger
+parseArger parse -i bin/remove \
+  --help-message "Remove a proompt by name" \
+  --arg 'name "proompt name to remove"'
+
+# Concatenate the 'remove' script implementation
+cat << 'EOF' >> bin/remove
+
+# Check if the proompt exists, die if not
+proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"
+if [ ! -f "$proompt_file" ]; then
+  die "Proompt $_arg_name does not exist."
+fi
+
+# Remove the proompt file
+rm "$proompt_file"
+
+echo "Proompt $_arg_name has been removed."
+EOF

@@ -1,0 +1,359 @@
+<form id="Proompty">
+<h2>Proompty form</h2>
+<div class="form-group">
+	<label for="target" class="form-label">target</label>
+	<span class="input-help">Proompty subcommand</span>
+	<select pa-type="pos" name="target" id="target" required class="form-select">
+
+		<option value="add">add</option>
+		<option value="get">get</option>
+		<option value="list">list</option>
+		<option value="remove">remove</option>
+	</select>
+</div><button id="Proompty_parse_btn">Parse</button>
+	<pre id="Proompty_result" contenteditable=true ></pre>
+	<pre id="Proompty_server_response"></pre>
+</form><div id="_subcommands">
+	<h3>Subcommand forms</h3>
+<div class="d-none subcmd-container-target" id="target_add_container"><form id="bin_add">
+<h2>add form</h2>
+<button id="bin_add_parse_btn">Parse</button>
+	<pre id="bin_add_result" contenteditable=true ></pre>
+	<pre id="bin_add_server_response"></pre>
+</form>
+<script type="text/javascript">
+	function bin_add_parse(__form) { 
+		let bin_add_frm = new FormData(__form);
+		let out = '';
+		for(const inp of bin_add_frm.keys()) {
+			const ielt = document.getElementById(inp);
+			switch(ielt.getAttribute('pa-type')) {
+				case 'pos':
+					if (/[\s!@#$%^&*()_+=[\]{};':"\|,.<>/?]/.test(bin_add_frm.get(inp))) {
+						out+=' "'+bin_add_frm.get(inp)+'"';
+					} else {
+						out+=' '+bin_add_frm.get(inp);
+					}
+					break;
+				case 'opt':
+					if(bin_add_frm.get(inp) !== '') {
+						if (ielt.hasAttribute('pa-repeat')) {
+							for(const val of bin_add_frm.get(inp).split(`
+`)) {
+								out+=' --'+inp+' "'+val+'"';
+							}
+						} else {
+							out+=' --'+inp+' "'+bin_add_frm.get(inp)+'"';
+						}
+					}
+					break;
+				case 'flag':
+					if(ielt.checked === true) {
+						out+=' --'+inp;
+					} else {
+						out+=' --no-'+inp;
+					}
+					break;
+			}
+		}
+		// document.getElementById('Proompty_parse_btn').parentNode.dispatchEvent(new Event('submit'));
+		document.getElementById('Proompty_parse_btn').click();
+		out=document.getElementById('Proompty_result').innerHTML+out;
+		document.getElementById('Proompty_result').innerHTML=out;
+		
+		document.getElementById('bin_add_result').innerHTML=out;
+	}
+document.getElementById('bin_add').addEventListener('submit', function(e) {
+				e.preventDefault();
+				e.target.checkValidity();
+				bin_add_parse(e.target);
+				if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+					&& (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+					&& (window.location.port !== '80' && window.location.port !== '443')) {
+					fetch(window.location.protocol+'//' + window.location.hostname + ':' + window.location.port + '/form', {
+						method: 'POST',
+						body:document.getElementById('Proompty_result').innerHTML.replace(/add /g, '')
+					})
+						.then(response => response.text())
+						.then(result => {
+							document.getElementById('bin_add_server_response').innerHTML = result;
+						})
+						.catch(error => {
+							document.getElementById('bin_add_server_response').innerHTML = error;
+						});
+				}
+			});
+</script></div><div class="d-none subcmd-container-target" id="target_get_container"><form id="bin_get">
+<h2>get form</h2>
+<button id="bin_get_parse_btn">Parse</button>
+	<pre id="bin_get_result" contenteditable=true ></pre>
+	<pre id="bin_get_server_response"></pre>
+</form>
+<script type="text/javascript">
+	function bin_get_parse(__form) { 
+		let bin_get_frm = new FormData(__form);
+		let out = '';
+		for(const inp of bin_get_frm.keys()) {
+			const ielt = document.getElementById(inp);
+			switch(ielt.getAttribute('pa-type')) {
+				case 'pos':
+					if (/[\s!@#$%^&*()_+=[\]{};':"\|,.<>/?]/.test(bin_get_frm.get(inp))) {
+						out+=' "'+bin_get_frm.get(inp)+'"';
+					} else {
+						out+=' '+bin_get_frm.get(inp);
+					}
+					break;
+				case 'opt':
+					if(bin_get_frm.get(inp) !== '') {
+						if (ielt.hasAttribute('pa-repeat')) {
+							for(const val of bin_get_frm.get(inp).split(`
+`)) {
+								out+=' --'+inp+' "'+val+'"';
+							}
+						} else {
+							out+=' --'+inp+' "'+bin_get_frm.get(inp)+'"';
+						}
+					}
+					break;
+				case 'flag':
+					if(ielt.checked === true) {
+						out+=' --'+inp;
+					} else {
+						out+=' --no-'+inp;
+					}
+					break;
+			}
+		}
+		// document.getElementById('Proompty_parse_btn').parentNode.dispatchEvent(new Event('submit'));
+		document.getElementById('Proompty_parse_btn').click();
+		out=document.getElementById('Proompty_result').innerHTML+out;
+		document.getElementById('Proompty_result').innerHTML=out;
+		
+		document.getElementById('bin_get_result').innerHTML=out;
+	}
+document.getElementById('bin_get').addEventListener('submit', function(e) {
+				e.preventDefault();
+				e.target.checkValidity();
+				bin_get_parse(e.target);
+				if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+					&& (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+					&& (window.location.port !== '80' && window.location.port !== '443')) {
+					fetch(window.location.protocol+'//' + window.location.hostname + ':' + window.location.port + '/form', {
+						method: 'POST',
+						body:document.getElementById('Proompty_result').innerHTML.replace(/get /g, '')
+					})
+						.then(response => response.text())
+						.then(result => {
+							document.getElementById('bin_get_server_response').innerHTML = result;
+						})
+						.catch(error => {
+							document.getElementById('bin_get_server_response').innerHTML = error;
+						});
+				}
+			});
+</script></div><div class="d-none subcmd-container-target" id="target_list_container"><form id="bin_list">
+<h2>list form</h2>
+<button id="bin_list_parse_btn">Parse</button>
+	<pre id="bin_list_result" contenteditable=true ></pre>
+	<pre id="bin_list_server_response"></pre>
+</form>
+<script type="text/javascript">
+	function bin_list_parse(__form) { 
+		let bin_list_frm = new FormData(__form);
+		let out = '';
+		for(const inp of bin_list_frm.keys()) {
+			const ielt = document.getElementById(inp);
+			switch(ielt.getAttribute('pa-type')) {
+				case 'pos':
+					if (/[\s!@#$%^&*()_+=[\]{};':"\|,.<>/?]/.test(bin_list_frm.get(inp))) {
+						out+=' "'+bin_list_frm.get(inp)+'"';
+					} else {
+						out+=' '+bin_list_frm.get(inp);
+					}
+					break;
+				case 'opt':
+					if(bin_list_frm.get(inp) !== '') {
+						if (ielt.hasAttribute('pa-repeat')) {
+							for(const val of bin_list_frm.get(inp).split(`
+`)) {
+								out+=' --'+inp+' "'+val+'"';
+							}
+						} else {
+							out+=' --'+inp+' "'+bin_list_frm.get(inp)+'"';
+						}
+					}
+					break;
+				case 'flag':
+					if(ielt.checked === true) {
+						out+=' --'+inp;
+					} else {
+						out+=' --no-'+inp;
+					}
+					break;
+			}
+		}
+		// document.getElementById('Proompty_parse_btn').parentNode.dispatchEvent(new Event('submit'));
+		document.getElementById('Proompty_parse_btn').click();
+		out=document.getElementById('Proompty_result').innerHTML+out;
+		document.getElementById('Proompty_result').innerHTML=out;
+		
+		document.getElementById('bin_list_result').innerHTML=out;
+	}
+document.getElementById('bin_list').addEventListener('submit', function(e) {
+				e.preventDefault();
+				e.target.checkValidity();
+				bin_list_parse(e.target);
+				if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+					&& (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+					&& (window.location.port !== '80' && window.location.port !== '443')) {
+					fetch(window.location.protocol+'//' + window.location.hostname + ':' + window.location.port + '/form', {
+						method: 'POST',
+						body:document.getElementById('Proompty_result').innerHTML.replace(/list /g, '')
+					})
+						.then(response => response.text())
+						.then(result => {
+							document.getElementById('bin_list_server_response').innerHTML = result;
+						})
+						.catch(error => {
+							document.getElementById('bin_list_server_response').innerHTML = error;
+						});
+				}
+			});
+</script></div><div class="d-none subcmd-container-target" id="target_remove_container"><form id="bin_remove">
+<h2>remove form</h2>
+<button id="bin_remove_parse_btn">Parse</button>
+	<pre id="bin_remove_result" contenteditable=true ></pre>
+	<pre id="bin_remove_server_response"></pre>
+</form>
+<script type="text/javascript">
+	function bin_remove_parse(__form) { 
+		let bin_remove_frm = new FormData(__form);
+		let out = '';
+		for(const inp of bin_remove_frm.keys()) {
+			const ielt = document.getElementById(inp);
+			switch(ielt.getAttribute('pa-type')) {
+				case 'pos':
+					if (/[\s!@#$%^&*()_+=[\]{};':"\|,.<>/?]/.test(bin_remove_frm.get(inp))) {
+						out+=' "'+bin_remove_frm.get(inp)+'"';
+					} else {
+						out+=' '+bin_remove_frm.get(inp);
+					}
+					break;
+				case 'opt':
+					if(bin_remove_frm.get(inp) !== '') {
+						if (ielt.hasAttribute('pa-repeat')) {
+							for(const val of bin_remove_frm.get(inp).split(`
+`)) {
+								out+=' --'+inp+' "'+val+'"';
+							}
+						} else {
+							out+=' --'+inp+' "'+bin_remove_frm.get(inp)+'"';
+						}
+					}
+					break;
+				case 'flag':
+					if(ielt.checked === true) {
+						out+=' --'+inp;
+					} else {
+						out+=' --no-'+inp;
+					}
+					break;
+			}
+		}
+		// document.getElementById('Proompty_parse_btn').parentNode.dispatchEvent(new Event('submit'));
+		document.getElementById('Proompty_parse_btn').click();
+		out=document.getElementById('Proompty_result').innerHTML+out;
+		document.getElementById('Proompty_result').innerHTML=out;
+		
+		document.getElementById('bin_remove_result').innerHTML=out;
+	}
+document.getElementById('bin_remove').addEventListener('submit', function(e) {
+				e.preventDefault();
+				e.target.checkValidity();
+				bin_remove_parse(e.target);
+				if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+					&& (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+					&& (window.location.port !== '80' && window.location.port !== '443')) {
+					fetch(window.location.protocol+'//' + window.location.hostname + ':' + window.location.port + '/form', {
+						method: 'POST',
+						body:document.getElementById('Proompty_result').innerHTML.replace(/remove /g, '')
+					})
+						.then(response => response.text())
+						.then(result => {
+							document.getElementById('bin_remove_server_response').innerHTML = result;
+						})
+						.catch(error => {
+							document.getElementById('bin_remove_server_response').innerHTML = error;
+						});
+				}
+			});
+</script></div>
+	<script>
+	document.getElementById("target").addEventListener("change", function() {
+		var val = this.value;
+		document.querySelectorAll(".subcmd-container-target").forEach(function(el) {
+			el.classList.add("d-none");
+		});
+		var subcmd = document.getElementById("target_"+val+"_container").classList.remove("d-none");
+	});
+	</script>
+</div>
+</div>
+<script type="text/javascript">
+	function Proompty_parse(__form) { 
+		let Proompty_frm = new FormData(__form);
+		let out = 'Proompty';
+		for(const inp of Proompty_frm.keys()) {
+			const ielt = document.getElementById(inp);
+			switch(ielt.getAttribute('pa-type')) {
+				case 'pos':
+					if (/[\s!@#$%^&*()_+=[\]{};':"\|,.<>/?]/.test(Proompty_frm.get(inp))) {
+						out+=' "'+Proompty_frm.get(inp)+'"';
+					} else {
+						out+=' '+Proompty_frm.get(inp);
+					}
+					break;
+				case 'opt':
+					if(Proompty_frm.get(inp) !== '') {
+						if (ielt.hasAttribute('pa-repeat')) {
+							for(const val of Proompty_frm.get(inp).split(`
+`)) {
+								out+=' --'+inp+' "'+val+'"';
+							}
+						} else {
+							out+=' --'+inp+' "'+Proompty_frm.get(inp)+'"';
+						}
+					}
+					break;
+				case 'flag':
+					if(ielt.checked === true) {
+						out+=' --'+inp;
+					} else {
+						out+=' --no-'+inp;
+					}
+					break;
+			}
+		}
+		document.getElementById('Proompty_result').innerHTML=out;
+	}
+document.getElementById('Proompty').addEventListener('submit', function(e) {
+				e.preventDefault();
+				e.target.checkValidity();
+				Proompty_parse(e.target);
+				if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+					&& (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+					&& (window.location.port !== '80' && window.location.port !== '443')) {
+					fetch(window.location.protocol+'//' + window.location.hostname + ':' + window.location.port + '/form', {
+						method: 'POST',
+						body:document.getElementById('_result').innerHTML.replace(/Proompty /g, '')
+					})
+						.then(response => response.text())
+						.then(result => {
+							document.getElementById('Proompty_server_response').innerHTML = result;
+						})
+						.catch(error => {
+							document.getElementById('Proompty_server_response').innerHTML = error;
+						});
+				}
+			});
+</script>
