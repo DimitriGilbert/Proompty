@@ -6,6 +6,8 @@
 # @parseArger-declarations
 # @parseArger pos name "proompt name"
 # @parseArger opt template-file "replace default template file"
+# @parseArger opt prefix-mod "add a mod as prefix" --short p --repeat --alias prefix --alias pm
+# @parseArger opt suffix-mod "add a mod as suffix" --short s --repeat --alias suffix --alias sm
 # @parseArger-declarations-end
 
 # @parseArger-utils
@@ -39,6 +41,8 @@ _optional_positionals=();
 _arg_name="";
 # OPTIONALS ARGUMENTS
 _arg_template_file=
+_arg_prefix_mod=()
+_arg_suffix_mod=()
 # FLAGS
 # NESTED
 # LEFTOVERS
@@ -56,8 +60,10 @@ print_help()
 		echo -e "Proompty get command:"
 	echo -e "	name: proompt name"
 	echo -e "	--template-file <template-file>: replace default template file"
+	echo -e "	-p, --prefix-mod|--prefix|--pm <prefix-mod>: add a mod as prefix, repeatable"
+	echo -e "	-s, --suffix-mod|--suffix|--sm <suffix-mod>: add a mod as suffix, repeatable"
 	echo -e "Usage :
-	$0 <name> [--template-file <value>]";
+	$0 <name> [--template-file <value>] [--prefix-mod <value>] [--suffix-mod <value>]";
 	fi
 
 }
@@ -107,6 +113,42 @@ parse_commandline()
 				;;
 			--template-file=*)
 				_arg_template_file="${_key##--template-file=}"
+				;;
+			
+			-p|--pm|--prefix|--prefix-mod)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_prefix_mod+=("$2")
+				shift
+				;;
+			--prefix-mod=*)
+				_arg_prefix_mod+=("${_key##--prefix-mod=}")
+				;;
+			--prefix=*)
+				_arg_prefix_mod+=("${_key##--prefix=}")
+				;;
+			--pm=*)
+				_arg_prefix_mod+=("${_key##--pm=}")
+				;;
+			-p*)
+				_arg_prefix_mod+=("${_key##-p}")
+				;;
+			
+			-s|--sm|--suffix|--suffix-mod)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_suffix_mod+=("$2")
+				shift
+				;;
+			--suffix-mod=*)
+				_arg_suffix_mod+=("${_key##--suffix-mod=}")
+				;;
+			--suffix=*)
+				_arg_suffix_mod+=("${_key##--suffix=}")
+				;;
+			--sm=*)
+				_arg_suffix_mod+=("${_key##--sm=}")
+				;;
+			-s*)
+				_arg_suffix_mod+=("${_key##-s}")
 				;;
 			
 			-h|--help)
@@ -183,6 +225,8 @@ print_debug()
 	
 	echo -e "	name: ${_arg_name}";
 	echo -e "	template-file: ${_arg_template_file}";
+	echo -e "	prefix-mod: ${_arg_prefix_mod[*]}";
+	echo -e "	suffix-mod: ${_arg_suffix_mod[*]}";
 	echo -e "	leftovers: ${_arg_leftovers[*]}";
 
 }
@@ -203,6 +247,23 @@ trap on_interrupt INT;
 # @parseArger-parsing-end
 # print_debug "$@"
 # @parseArger-end
+
+get_mod() {
+	local mod="$1"
+	if [[ "$mod" =~ ^/ ]]; then
+		true;
+	else
+		mod="$SCRIPT_DIR/../mods/$mod";
+	fi
+	if [ ! -f "$mod" ]; then
+		die "Mod $mod does not exist."
+	fi
+	# if mod is a directory, select a file inside randomly
+	if [ -d "$mod" ]; then
+		mod="$mod/$(ls "$mod" | shuf -n 1)"
+	fi
+	cat "$mod";
+}
 
 # Check if the proompt exists, die if not
 proompt_file="$SCRIPT_DIR/../proomplates/$_arg_name"
@@ -229,6 +290,15 @@ done
 
 # Use these variables with the template file
 result=$(envsubst < "$_arg_template_file")
+
+# adding mods
+for mod in "${_arg_prefix_mod[@]}"; do
+  result="$(get_mod "$mod")$result"
+done
+
+for mod in "${_arg_suffix_mod[@]}"; do
+  result="$result$(get_mod "$mod")"
+done
 
 # Echo the result
 echo "$result"
