@@ -39,7 +39,7 @@ Proompty add <my/proompt/template/name>
 
 The following commands have been used to generate the proompts below
 
-### 1
+### improve a snippet
 
 ```bash
 Proompty get intro/snippet \
@@ -91,7 +91,7 @@ Are you ready to help me ?
 what chatGPT told me :
 ![chatgpt response](content/chatgpt_response.png)
 
-### 2
+### improvement this time ?
 
 ```bash
 Proompty get intro/snippet \
@@ -146,6 +146,7 @@ You are a great developer !
 ```
 what chatGPT told me :
 ![chatgpt response](content/chatgpt_response_2.png) 
+...yup !
 
 ## Installation
 
