@@ -4,10 +4,10 @@
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
 # @parseArger-leftovers leftovers --parse
 # @parseArger-declarations
-# @parseArger pos name "proompt name"
+# @parseArger pos name "proompt name" --complete-custom "find \$PROOMPTY_DIR/proomplates/ -type f | sed 's|'\$PROOMPTY_DIR'/proomplates/||g'"
 # @parseArger opt template-file "replace default template file"
-# @parseArger opt prefix-mod "add a mod as prefix" --short p --repeat --alias prefix --alias pm
-# @parseArger opt suffix-mod "add a mod as suffix" --short s --repeat --alias suffix --alias sm
+# @parseArger opt prefix-mod "add a mod as prefix" --short p --repeat --alias prefix --alias pm --complete-custom "find \$PROOMPTY_DIR/mods/ -type f | sed 's|'\$PROOMPTY_DIR'/mods/||g'"
+# @parseArger opt suffix-mod "add a mod as suffix" --short s --repeat --alias suffix --alias sm --complete-custom "find \$PROOMPTY_DIR/mods/ -type f | sed 's|'\$PROOMPTY_DIR'/mods/||g'"
 # @parseArger-declarations-end
 
 # @parseArger-utils
