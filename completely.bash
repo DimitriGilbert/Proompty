@@ -52,6 +52,10 @@ _Proompty_completions() {
       while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find /mods/ -type f | sed 's|''/mods/||g')")" -- "$cur" )
       ;;
 
+    'remove'*)
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')")" -- "$cur" )
+      ;;
+
     'list'*)
       while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "--prompt-dir")" -- "$cur" )
       ;;
@@ -65,7 +69,7 @@ _Proompty_completions() {
       ;;
 
     'set'*)
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find /proomplates/ -type f | sed 's|''/proomplates/||g')")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')")" -- "$cur" )
       ;;
 
     *)

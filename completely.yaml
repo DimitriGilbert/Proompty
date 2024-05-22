@@ -47,6 +47,7 @@ Proompty get*--sm:
 Proompty list:
 - --prompt-dir
 Proompty remove:
+- $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')
 Proompty set:
-- $(find /proomplates/ -type f | sed 's|''/proomplates/||g')
+- $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')
 

@@ -3,7 +3,7 @@
 # @parseArger-help "remove a proompt" --option "help" --short-option "h"
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
 # @parseArger-declarations
-# @parseArger pos name "proompt name to remove"
+# @parseArger pos name "proompt name to remove" --complete-custom "find \$PROOMPTY_DIR/proomplates/ -type f | sed 's|'\$PROOMPTY_DIR'/proomplates/||g'"
 # @parseArger-declarations-end
 
 # @parseArger-utils
