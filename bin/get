@@ -262,6 +262,22 @@ trap on_interrupt INT;
 # print_debug "$@"
 # @parseArger-end
 
+select_random_file() {
+  local dir="$1"
+  local entries=("$dir"/*)
+  local entry
+
+  while true; do
+    entry="${entries[RANDOM % ${#entries[@]}]}"
+    if [ -d "$entry" ]; then
+      entries=("$entry"/*)
+    elif [ -f "$entry" ]; then
+      echo "$entry"
+      return
+    fi
+  done
+}
+
 get_mod() {
 	local mod="$1"
 	if [[ "$mod" =~ ^/ ]]; then
@@ -274,7 +290,8 @@ get_mod() {
 	fi
 	# if mod is a directory, select a file inside randomly
 	if [ -d "$mod" ]; then
-		mod="$mod/$(ls "$mod" | shuf -n 1)"
+		# mod="$mod/$(ls "$mod" | shuf -n 1)"
+		mod=$(select_random_file "$mod");
 	fi
 	cat "$mod";
 }
@@ -296,7 +313,8 @@ fi
 # check if _arg_template_file is directory
 if [ -d "$_arg_template_file" ]; then
   # select a file inside randomly
-  _arg_template_file="$_arg_template_file/$(ls "$_arg_template_file" | shuf -n 1)"
+  # _arg_template_file="$_arg_template_file/$(ls "$_arg_template_file" | shuf -n 1)"
+	_arg_template_file=$(select_random_file "$_arg_template_file");
 fi
 
 if [ ! -f "$_arg_template_file" ]; then
