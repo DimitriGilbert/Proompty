@@ -12,7 +12,7 @@ Proompty add:
 - --set-var
 - --set-var-value
 Proompty get:
-- $(find /proomplates/ -type f | sed 's|''/proomplates/||g')
+- $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|''$PROOMPTY_DIR/proomplates/||g')
 - --template-file
 - --prefix-mod
 - --prefix
@@ -22,6 +22,7 @@ Proompty get:
 - --suffix
 - --sm
 - -s
+- --append
 - --clip
 - --no-clip
 - --output
@@ -47,5 +48,5 @@ Proompty list:
 - --prompt-dir
 Proompty remove:
 Proompty set:
-- $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')
+- $(find /proomplates/ -type f | sed 's|''/proomplates/||g')
 

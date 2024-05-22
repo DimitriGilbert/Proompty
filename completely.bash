@@ -61,11 +61,11 @@ _Proompty_completions() {
       ;;
 
     'get'*)
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find /proomplates/ -type f | sed 's|''/proomplates/||g') --template-file --prefix-mod --prefix --pm -p --suffix-mod --suffix --sm -s --clip --no-clip --output --no-output")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|''$PROOMPTY_DIR/proomplates/||g') --template-file --prefix-mod --prefix --pm -p --suffix-mod --suffix --sm -s --append --clip --no-clip --output --no-output")" -- "$cur" )
       ;;
 
     'set'*)
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find /proomplates/ -type f | sed 's|''/proomplates/||g')")" -- "$cur" )
       ;;
 
     *)

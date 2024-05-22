@@ -4,13 +4,25 @@ A dumb assistant for organized Proompt inge-near
 
 Proompty is a command line tool to generate prompt based of template you manage.
 
-Why ? Meeeh, creating prompt sucks, you type and type to "maybe" have a decent result...
+Why ? Meeeh, creating prompt sucks, you type and type and type, agaiiiiiinnnn ...
 
-And once you have good prompts... how do you manage them ? a single file ? an Obsidian directory perhaps ? Copy pasting ? Maaan this sucks too !
+And, "maybe", (emphasis on MAYBE) you might sometimes have a have a decent result... 
 
-Weren't AI suppose to fix this stupid grind ? ...
+And once you have good prompts... how do you manage them, hum ?
 
-Follow me in going full circle, use a CLI tool to generate your prompts, manage prompt templates and prompt mods, no need for AI when you have autocomplete in your terminal !!
+a single file ? an Obsidian directory perhaps ?
+
+And what ? Copy pasting ? Seriously ??
+
+Maaan this sucks too ! 
+
+Weren't AI suppose to fix *that* stupid grind ? ...
+
+Well, follow me in going full circle then !
+
+Use a CLI tool to generate your prompts and manage your templates and mods !
+
+Who needs AI when you have autocomplete in your terminal !!?
 
 ## TL;DR
 
