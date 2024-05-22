@@ -23,7 +23,7 @@ parseArger parse -i bin/get \
 cat << 'EOF' >> bin/get
 
 # Check if the proompt exists, die if not
-proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"
+proompt_file="$_SCRIPT_DIR/proomplates/$_arg_name.sh"
 if [ ! -f "$proompt_file" ]; then
   die "Proompt $_arg_name does not exist."
 fi
@@ -113,7 +113,7 @@ parseArger parse -i bin/add \
 cat << 'EOF' >> bin/add
 
 # Check if a proompt with the same name already exists
-proompt_file="$SCRIPT_DIR/proomplates/$_arg_name"
+proompt_file="$_SCRIPT_DIR/proomplates/$_arg_name"
 if [ -f "$proompt_file" ]; then
   die "Proompt $_arg_name already exists."
 fi
@@ -144,7 +144,7 @@ parseArger parse -i bin/remove \
 cat << 'EOF' >> bin/remove
 
 # Check if the proompt exists, die if not
-proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"
+proompt_file="$_SCRIPT_DIR/proomplates/$_arg_name.sh"
 if [ ! -f "$proompt_file" ]; then
   die "Proompt $_arg_name does not exist."
 fi
