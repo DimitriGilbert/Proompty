@@ -284,19 +284,40 @@ trap on_interrupt INT;
 
 select_random_file() {
   local dir="$1"
+
+  # Validate the input directory
+  if [[ ! -d "$dir" ]]; then
+    echo "Error: '$dir' is not a directory."
+    return 1
+  fi
+
   local entries=("$dir"/*)
   local entry
 
+  # Handle empty directory
+  if [[ ${#entries[@]} -eq 0 ]]; then
+    echo "Error: '$dir' is empty."
+    return 1
+  fi
+
   while true; do
     entry="${entries[RANDOM % ${#entries[@]}]}"
-    if [ -d "$entry" ]; then
+
+    if [[ -d "$entry" ]]; then
       entries=("$entry"/*)
-    elif [ -f "$entry" ]; then
+
+      # Handle empty subdirectory
+      if [[ ${#entries[@]} -eq 0 ]]; then
+        echo "Error: Subdirectory '$entry' is empty."
+        return 1
+      fi
+    elif [[ -f "$entry" ]]; then
       echo "$entry"
-      return
+      return 0
     fi
   done
 }
+
 
 get_mod() {
 	local mod="$1"
