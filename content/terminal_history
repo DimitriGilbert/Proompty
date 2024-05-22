@@ -1,0 +1,197 @@
+
+: 1716329507:0;parseArger project Proompty --description "A dumb assistant for organized Proompt inge-near" --project-subcommand add --project-subcommand get --project-subcommand list --project-subcommand remove --git-repo DimitriGilbert/Proompty \
+: 1716329654:0;cd Proompty
+: 1716329660:0;parseArger parse -i bin/get \\
+--help-message "get a proompt with your options" \\
+--arg 'name "proompt name"' \\
+--opt 'template-file "replace default template file"' \\
+--leftovers
+: 1716329690:0;parseArger parse -i bin/get \\
+--help-message "get a proompt with your options" \\
+--pos 'name "proompt name"' \\
+--opt 'template-file "replace default template file"' \\
+--leftovers
+: 1716329740:0;parseArger parse -i bin/get \\
+--help-message 'get a proompt with your options' \\
+--pos 'name "proompt name"' \\
+--opt 'template-file "replace default template file"' \\
+--leftovers
+: 1716329844:0;\
+parseArger parse -i bin/get \\
+--arg 'name "proompt name"' \\
+--opt 'template-file "replace default template file"' \\
+--leftovers
+: 1716329867:0;\
+parseArger parse -i bin/get \\
+--pos 'name "proompt name"' \\
+--opt 'template-file "replace default template file"' \\
+--leftovers
+: 1716329910:0;cat << 'EOF' >> bin/get\
+\
+# Check if the proompt exists, die if not\
+proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"\
+if [ ! -f "$proompt_file" ]; then\
+  die "Proompt $_arg_name does not exist."\
+fi\
+\
+# Source the proompt file\
+source "$proompt_file"\
+\
+# Check if the template file exists, die if not\
+if [ "$_arg_template_file" = "" ]; then\
+  _arg_template_file="$proompt_template"\
+fi\
+\
+if [ ! -f "$_arg_template_file" ]; then\
+  die "Template file $_arg_template_file does not exist."\
+fi\
+\
+# Using leftovers to create variables\
+for arg in "${_arg_leftovers[@]}"; do\
+  eval "$arg"\
+done\
+\
+# Use these variables with the template file\
+result=$(envsubst < "$_arg_template_file")\
+\
+# Echo the result\
+echo "$result"\
+EOF
+: 1716330028:0;cat << 'EOF' >> bin/list\
+\
+# Retrieve list of proompts from the proomplates directory\
+proompt_dir="./proomplates"\
+proompts=()\
+archived_proompts=()\
+\
+for file in "$proompt_dir"/*; do\
+  if [ -f "$file" ]; then\
+    proompt_name=$(basename "$file")\
+    if [[ "$proompt_name" == *"_archived"* ]]; then\
+      archived_proompts+=("$proompt_name")\
+    else\
+      proompts+=("$proompt_name")\
+    fi\
+  fi\
+done\
+\
+# Display the list of available proompts\
+echo "Available proompts:"\
+for proompt in "${proompts[@]}"; do\
+  echo "$proompt"\
+done\
+\
+EOF
+: 1716330060:0;\
+parseArger parse -i bin/add \\
+--pos 'name "proompt name"' \\
+--opt 'template-file "template file for the proompt"' \\
+--opt 'description "description of the proompt"' \\
+--opt 'tags "tags associated with the proompt" --repeat'
+: 1716330071:0;\
+cat << 'EOF' >> bin/add\
+\
+# Check if a proompt with the same name already exists\
+proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"\
+if [ -f "$proompt_file" ]; then\
+  die "Proompt $_arg_name already exists."\
+fi\
+\
+# Create a new proompt file\
+echo "# Proompt: $_arg_name" > "$proompt_file"\
+echo "proompt_template=$_arg_template_file" >> "$proompt_file"\
+\
+# Add optional description\
+if [ -n "$_arg_description" ]; then\
+  echo "proompt_description='$_arg_description'" >> "$proompt_file"\
+fi\
+\
+# Add tags if provided\
+if [ "${#_arg_tags[@]}" -gt 0 ]; then\
+  echo "proompt_tags=(${_arg_tags[*]})" >> "$proompt_file"\
+fi\
+\
+echo "Proompt $_arg_name has been added."\
+EOF
+: 1716330077:0;\
+parseArger parse -i bin/remove \\
+--pos 'name "proompt name to remove"'
+: 1716330084:0;\
+cat << 'EOF' >> bin/remove\
+\
+# Check if the proompt exists, die if not\
+proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"\
+if [ ! -f "$proompt_file" ]; then\
+  die "Proompt $_arg_name does not exist."\
+fi\
+\
+# Remove the proompt file\
+rm "$proompt_file"\
+\
+echo "Proompt $_arg_name has been removed."\
+EOF
+: 1716330683:0;git add .
+: 1716330753:0;git commit -am 'first commit [prompt]'
+: 1716331194:0;parseArger parse -i bin/get --opt 'prefix-mod "add a mod as prefix" -r --alias prefix --alias pm -s p' --opt 'suffix-mod "add a mod as suffix" -r --alias suffix --alias sm -s s'
+: 1716331856:0;git commit -am 'feat: proompty get --mod implementation'
+: 1716362792:0;git add bin/add
+: 1716362867:0;git commit -m 'feat: better template file management'
+: 1716362895:0;git add bin/remove
+: 1716362983:0;git commit -m 'fix: proompt file check'
+: 1716362999:0;git add bin/remove
+: 1716363001:0;git commit -m 'fix: proompt file check'
+: 1716363009:0;git status
+: 1716363018:0;git add Proompty 
+: 1716363046:0;git commit -m 'fix: command -v output redirection'
+: 1716363585:0;git commit -am 'fix: SCRIPT_DIR booboo'
+: 1716364093:0;parseArger parse -i bin/get --parse-leftovers
+: 1716366438:0;git commit -am 'fix: variable creation\
+fix: mod folder is valid mod'
+: 1716366551:0;parseArger parse -i bin/add --opt 'template-content "content for the template file"'
+: 1716366827:0;git commit -am 'feat: template content in add'
+: 1716366952:0;git commit -am '...'
+: 1716367500:0;parseArger generate --help-message "set default variables values for a proompt" --pos 'name "variable name"' --pos 'value "variable value"'
+: 1716367517:0;parseArger generate --help-message "set default variables values for a proompt" --pos 'name "variable name"' --pos 'value "variable value"' --output bin/set
+: 1716367533:0;parseArger parse -i ./Proompty
+: 1716367681:0;parseArger parse -i bin/set 
+: 1716371276:0;parseArger parse -i bin/add --opt 'set-var "name to set a variable for the template" -r' --opt 'set-var-value "value of the corresponding set-var" -r'
+: 1716375680:0;git commit -am 'feat: select random file function\
+: 1716376043:0;git add mods/ proomplates/ templates/
+: 1716376068:0;git commit -m 'feat: basic proompts and mods'
+: 1716378768:0;cd worskpace/Code/Feedelity/ && docker-compose stop
+: 1716379080:0;hub create DimitriGilbert/Proompty
+: 1716379116:0;git remote add origin git@github.com:DimitriGilbert/Proompty.git
+: 1716379132:0;git push origin main
+: 1716380217:0;git commit -m 'feat: readme improvement'
+: 1716380223:0;git commit -am 'feat: readme improvement'
+: 1716380387:0;parseArger parse -i bin/list --opt 'prompt-dir "base directory for listing"'
+: 1716383932:0;git commit -am 'fix: list command'
+: 1716383938:0;git push origin main
+: 1716385844:0;parseArger completely Proompty ./Proompty --no-run
+: 1716385855:0;completely preview > completely.bash
+: 1716385882:0;parseArger completely Proompty ./Proompty --no-run --subcommand-directory bin
+: 1716385901:0;completely preview > completely.bash
+: 1716390243:0;git status
+: 1716390282:0;git add completely.*
+: 1716390296:0;gcamp main 'feat: bash completion'
+: 1716390401:0;xclip --help
+: 1716390500:0;parseArger parse -i bin/get --flag 'clip "copy to clipboard" --on'
+: 1716390606:0;gcamp main 'feat: copy to clipboard by default'
+: 1716390685:0;parseArger parse -i bin/get --flag 'output "do you need output" --on'
+: 1716390981:0;parseArger parse -i bin/get --flag 'output "do you need output" --on'
+: 1716391041:0;gcamp main 'feat: control output'
+: 1716397216:0;parseArger parse -i bin/get
+: 1716397239:0;gcamp main 'fix: duplicate flag''
+: 1716397241:0;gcamp main 'fix: duplicate flag'
+: 1716397310:0;parseArger completely Proompty ./Proompty --no-run --subcommand-directory bin
+: 1716397335:0;completely preview > completely.bash
+: 1716397356:0;gcamp main 'update: bash completion'
+: 1716397415:0;make pa-document
+: 1716397430:0;parseArger document "./Proompty" --directory "./bin" --out "./documentation.md" --title "Proompty"
+: 1716397454:0;parseArger document -f "./Proompty" --directory "./bin" --out "./documentation.md" --title "Proompty"
+: 1716397632:0;parseArger document -f "./Proompty" --directory "./bin" > "./documentation.md"
+: 1716397760:0;parseArger document -f "./Proompty" > "./documentation.md"
+: 1716397813:0;parseArger bulk-parse --directory ./bin
+: 1716397819:0;parseArger document -f "./Proompty" > "./documentation.md"
+: 1716397853:0;git status
+: 1716397887:0;gcamp main 'update: documentation'
