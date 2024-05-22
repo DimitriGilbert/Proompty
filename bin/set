@@ -3,7 +3,7 @@
 # @parseArger-help "set default variables values for a proompt" --option "help" --short-option "h"
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
 # @parseArger-declarations
-# @parseArger pos proompt-name "variable proompt name" --complete-custom "find \$PROOMPTY_DIR/proomplates/ -type f | sed 's|'\$PROOMPTY_DIR'/proomplates/||g'"
+# @parseArger pos proompt-name "variable proompt name" --complete-custom "find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g'"
 # @parseArger pos name "variable name"
 # @parseArger pos value "variable value"
 # @parseArger-declarations-end
@@ -199,4 +199,3 @@ fi
 
 # Update the proompt file concatenating the new variables
 echo -e "\nproompt_vars[\"$_arg_name\"]=\"$_arg_value\"" >> "$proompt_file"
-

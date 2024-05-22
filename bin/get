@@ -1,6 +1,6 @@
 #!/bin/bash
 # @parseArger-begin
-# @parseArger-help "Proompty get command" --option "help" --short-option "h"
+# @parseArger-help "get a proompt" --option "help" --short-option "h"
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
 # @parseArger-leftovers leftovers --parse
 # @parseArger-declarations
@@ -63,7 +63,7 @@ print_help()
 
 	if [[ "$_helpHasBeenPrinted" == "1" ]]; then
 		_helpHasBeenPrinted=0;
-		echo -e "Proompty get command:"
+		echo -e "get a proompt:"
 	echo -e "	name: proompt name"
 	echo -e "	--template-file <template-file>: replace default template file"
 	echo -e "	-p, --prefix-mod|--prefix|--pm <prefix-mod>: add a mod as prefix, repeatable"

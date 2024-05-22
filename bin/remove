@@ -1,6 +1,6 @@
 #!/bin/bash
 # @parseArger-begin
-# @parseArger-help "Proompty remove command" --option "help" --short-option "h"
+# @parseArger-help "remove a proompt" --option "help" --short-option "h"
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
 # @parseArger-declarations
 # @parseArger pos name "proompt name to remove"
@@ -48,7 +48,7 @@ print_help()
 
 	if [[ "$_helpHasBeenPrinted" == "1" ]]; then
 		_helpHasBeenPrinted=0;
-		echo -e "Proompty remove command:"
+		echo -e "remove a proompt:"
 	echo -e "	name: proompt name to remove"
 	echo -e "Usage :
 	$0 <name>";

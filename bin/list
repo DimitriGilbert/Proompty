@@ -1,6 +1,6 @@
 #!/bin/bash
 # @parseArger-begin
-# @parseArger-help "Proompty list command" --option "help" --short-option "h"
+# @parseArger-help "list proompts" --option "help" --short-option "h"
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
 # @parseArger-declarations
 # @parseArger opt prompt-dir "base directory for listing"
@@ -48,7 +48,7 @@ print_help()
 
 	if [[ "$_helpHasBeenPrinted" == "1" ]]; then
 		_helpHasBeenPrinted=0;
-		echo -e "Proompty list command:"
+		echo -e "list proompts:"
 	echo -e "	--prompt-dir <prompt-dir>: base directory for listing"
 	echo -e "Usage :
 	$0 [--prompt-dir <value>]";
