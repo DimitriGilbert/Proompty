@@ -183,10 +183,10 @@ trap on_interrupt INT;
 # print_debug "$@"
 # @parseArger-end
 
-# Check if the proompt exists, die if not
-proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"
+# Check if the proompt exists
+proompt_file="$_SCRIPT_DIR/../proomplates/$_arg_name"
 if [ ! -f "$proompt_file" ]; then
-  die "Proompt $_arg_name does not exist."
+  die "Proompt $_arg_name already exists."
 fi
 
 # Remove the proompt file
