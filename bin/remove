@@ -186,7 +186,7 @@ trap on_interrupt INT;
 # Check if the proompt exists
 proompt_file="$_SCRIPT_DIR/../proomplates/$_arg_name"
 if [ ! -f "$proompt_file" ]; then
-  die "Proompt $_arg_name already exists."
+  die "Proompt $_arg_name does not exists."
 fi
 
 # Remove the proompt file
