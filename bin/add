@@ -223,9 +223,40 @@ trap on_interrupt INT;
 # @parseArger-end
 
 # Check if a proompt with the same name already exists
-proompt_file="$SCRIPT_DIR/proomplates/$_arg_name.sh"
+proompt_file="$_SCRIPT_DIR/../proomplates/$_arg_name"
 if [ -f "$proompt_file" ]; then
   die "Proompt $_arg_name already exists."
+fi
+
+if [ "$_arg_template_file" = "" ]; then
+	_arg_template_file="$_arg_name";
+fi
+
+_tpl_dir="$(dirname "$_arg_template_file")";
+
+# check if $_arg_template_file start with a /
+if [[ ! $_arg_template_file == /* ]]; then
+	_arg_template_file="$_SCRIPT_DIR/../templates/$_arg_template_file"
+	
+	_tpl_dir="$(dirname "$_arg_template_file")";
+
+	# Check if the template directory exsits
+	if [ ! -d "$_tpl_dir" ]; then
+		mkdir -p "$_tpl_dir"
+	fi
+	# Check if the template file exsits
+	if [ ! -f "$_arg_template_file" ]; then
+		touch "$_arg_template_file";
+	fi
+fi
+
+# Check if the template parent directory exsits
+if [ ! -d "$_tpl_dir" ]; then
+	die "Template directory does not exist.\n\t$_tpl_dir"
+fi
+# Check if the template file exsits
+if [ ! -f "$_arg_template_file" ]; then
+	die "Template file does not exist.\n\t$_arg_template_file"
 fi
 
 # Create a new proompt file
@@ -239,7 +270,12 @@ fi
 
 # Add tags if provided
 if [ "${#_arg_tags[@]}" -gt 0 ]; then
-  echo "proompt_tags=(${_arg_tags[*]})" >> "$proompt_file"
+  # echo "proompt_tags=(${_arg_tags[*]})" >> "$proompt_file"
+	_tags_str=""
+	for tag in "${_arg_tags[@]}"; do
+		_tags_str+=" \"$tag\"";
+	done
+	echo "proompt_tags=($_tags_str)" >> "$proompt_file";
 fi
 
 echo "Proompt $_arg_name has been added."
