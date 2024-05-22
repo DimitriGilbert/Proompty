@@ -10,7 +10,6 @@
 # @parseArger opt suffix-mod "add a mod as suffix" --short s --repeat --alias suffix --alias sm --complete-custom "find /mods/ -type f | sed 's|''/mods/||g'"
 # @parseArger flag clip "copy to clipboard" --on
 # @parseArger flag output "do you need output" --on
-# @parseArger flag output "do you need output" --on
 # @parseArger-declarations-end
 
 # @parseArger-utils
@@ -49,7 +48,6 @@ _arg_suffix_mod=()
 # FLAGS
 _arg_clip="on"
 _arg_output="on"
-_arg_output="on"
 # NESTED
 # LEFTOVERS
 _arg_leftovers=()
@@ -72,9 +70,8 @@ print_help()
 	echo -e "	-s, --suffix-mod|--suffix|--sm <suffix-mod>: add a mod as suffix, repeatable"
 	echo -e "	--clip|--no-clip: copy to clipboard, on by default (use --no-clip to turn it off)"
 	echo -e "	--output|--no-output: do you need output, on by default (use --no-output to turn it off)"
-	echo -e "	--output|--no-output: do you need output, on by default (use --no-output to turn it off)"
 	echo -e "Usage :
-	$0 <name> [--template-file <value>] [--prefix-mod <value>] [--suffix-mod <value>] [--[no-]clip] [--[no-]output] [--[no-]output]";
+	$0 <name> [--template-file <value>] [--prefix-mod <value>] [--suffix-mod <value>] [--[no-]clip] [--[no-]output]";
 	fi
 
 }
@@ -174,12 +171,6 @@ parse_commandline()
 			--no-output)
 				_arg_output="off"
 				;;
-			--output)
-				_arg_output="on"
-				;;
-			--no-output)
-				_arg_output="off"
-				;;
 			-h|--help)
 				print_help;
 				exit 0;
@@ -269,7 +260,6 @@ print_debug()
 	echo -e "	prefix-mod: ${_arg_prefix_mod[*]}";
 	echo -e "	suffix-mod: ${_arg_suffix_mod[*]}";
 	echo -e "	clip: ${_arg_clip}";
-	echo -e "	output: ${_arg_output}";
 	echo -e "	output: ${_arg_output}";
 	echo -e "	leftovers: ${_arg_leftovers[*]}";
 
