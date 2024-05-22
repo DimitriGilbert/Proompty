@@ -145,7 +145,7 @@ the highest security standards are required from you !
 You are a great developer !
 ```
 what chatGPT told me :
-![chatgpt response](content/chatgpt_response2.png) 
+![chatgpt response](content/chatgpt_response_2.png) 
 
 ## Installation
 
