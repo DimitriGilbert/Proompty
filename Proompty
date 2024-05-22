@@ -171,7 +171,7 @@ assign_positional_args()
 			eval "if [ \"\$_one_of${_positional_name}\" != \"\" ];then [[ \"\${_one_of${_positional_name}[*]}\" =~ \"\${1}\" ]];fi" || die "${_positional_name} must be one of: $(eval "echo \"\${_one_of${_positional_name}[*]}\"")" 1;
 			
 			if [ "$_arg_subcommand_arg" == "$_positional_name" ];then
-				if [ -f "bin/${1}" ] && command -v "bin/${1}";then
+				if [ -f "bin/${1}" ] && command -v "bin/${1}" &>/dev/null;then
 					__subcommand+=("bin/${1}");
 				elif [ -f "$_SCRIPT_DIR/bin/${1}" ] && command -v "$_SCRIPT_DIR/bin/${1}";then
 					__subcommand+=("$_SCRIPT_DIR/bin/${1}");
