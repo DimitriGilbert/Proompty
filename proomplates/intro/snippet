@@ -1,0 +1,7 @@
+# Proompt: intro/snippet
+proompt_template=/home/didi/worskpace/Code/Proompty/bin/../templates/intro/snippet/simple
+proompt_description='intro/snippet'
+proompt_tags=()
+declare -A proompt_vars=()
+proompt_vars["snippet"]="# your snippet"
+proompt_vars["task"]="..."

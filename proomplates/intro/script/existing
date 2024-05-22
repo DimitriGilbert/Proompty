@@ -1,0 +1,7 @@
+# Proompt: intro/script/existing
+proompt_template=/home/didi/worskpace/Code/Proompty/bin/../templates/intro/script/existing
+proompt_description='ask LLM to help you on an existing script'
+proompt_tags=( "code" "script")
+declare -A proompt_vars=()
+
+proompt_vars["script"]="# your script here"
