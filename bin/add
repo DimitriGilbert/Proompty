@@ -283,7 +283,6 @@ fi
 
 # Add tags if provided
 if [ "${#_arg_tags[@]}" -gt 0 ]; then
-  # echo "proompt_tags=(${_arg_tags[*]})" >> "$proompt_file"
 	_tags_str=""
 	for tag in "${_arg_tags[@]}"; do
 		_tags_str+=" \"$tag\"";
