@@ -2,7 +2,7 @@
 # @parseArger-begin
 # @parseArger-help "Proompty get command" --option "help" --short-option "h"
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
-# @parseArger-leftovers leftovers
+# @parseArger-leftovers leftovers --parse
 # @parseArger-declarations
 # @parseArger pos name "proompt name"
 # @parseArger opt template-file "replace default template file"
@@ -47,6 +47,8 @@ _arg_suffix_mod=()
 # NESTED
 # LEFTOVERS
 _arg_leftovers=()
+# LEFTOVERS
+	declare -A _arg_parsed_leftovers
 _verbose_level="0";
 
 
@@ -176,6 +178,18 @@ parse_commandline()
 					fi
 					;;
 				
+				# parsing leftovers
+				--*)
+					if [[ "$2" =~ ^--([^=]+)(=(.*))?$ ]] || [ "$2" = "" ]; then
+						_arg_parsed_leftovers["${1#--}"]="on"
+					elif [[ "$1" =~ ^--([^=]+)=(.*)$ ]]; then
+						_arg_parsed_leftovers["${BASH_REMATCH[1]}"]="${BASH_REMATCH[2]}";
+					else
+						_arg_parsed_leftovers["${1#--}"]="${2}";
+						shift;
+					fi
+					;;
+
 				*)
 				_last_positional="$1"
 				_positionals+=("$_last_positional")
@@ -255,7 +269,7 @@ get_mod() {
 	else
 		mod="$_SCRIPT_DIR/../mods/$mod";
 	fi
-	if [ ! -f "$mod" ]; then
+	if [ ! -f "$mod" ] && [ ! -d "$mod" ]; then
 		die "Mod $mod does not exist."
 	fi
 	# if mod is a directory, select a file inside randomly
@@ -283,9 +297,9 @@ if [ ! -f "$_arg_template_file" ]; then
   die "Template file $_arg_template_file does not exist."
 fi
 
-# Using leftovers to create variables
-for arg in "${_arg_leftovers[@]}"; do
-  eval "$arg"
+# Using parsed_leftovers to create variables
+for arg in "${!_arg_parsed_leftovers[@]}"; do
+	export "$arg"="${_arg_parsed_leftovers[$arg]}"
 done
 
 # Use these variables with the template file
@@ -293,12 +307,12 @@ result=$(envsubst < "$_arg_template_file")
 
 # adding mods
 for mod in "${_arg_prefix_mod[@]}"; do
-  result="$(get_mod "$mod")$result"
+  result="$(get_mod "$mod")\n$result"
 done
 
 for mod in "${_arg_suffix_mod[@]}"; do
-  result="$result$(get_mod "$mod")"
+  result="$result\n$(get_mod "$mod")"
 done
 
 # Echo the result
-echo "$result"
+echo -e "$result"
