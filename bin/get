@@ -293,6 +293,12 @@ if [ "$_arg_template_file" = "" ]; then
   _arg_template_file="$proompt_template"
 fi
 
+# check if _arg_template_file is directory
+if [ -d "$_arg_template_file" ]; then
+  # select a file inside randomly
+  _arg_template_file="$_arg_template_file/$(ls "$_arg_template_file" | shuf -n 1)"
+fi
+
 if [ ! -f "$_arg_template_file" ]; then
   die "Template file $_arg_template_file does not exist."
 fi
