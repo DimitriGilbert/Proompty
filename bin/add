@@ -8,6 +8,8 @@
 # @parseArger opt description "description of the proompt"
 # @parseArger opt tags "tags associated with the proompt" --repeat
 # @parseArger opt template-content "content for the template file"
+# @parseArger opt set-var "name to set a variable for the template" --repeat
+# @parseArger opt set-var-value "value of the corresponding set-var" --repeat
 # @parseArger-declarations-end
 
 # @parseArger-utils
@@ -44,6 +46,8 @@ _arg_template_file=
 _arg_description=
 _arg_tags=()
 _arg_template_content=
+_arg_set_var=()
+_arg_set_var_value=()
 # FLAGS
 # NESTED
 _verbose_level="0";
@@ -62,8 +66,10 @@ print_help()
 	echo -e "	--description <description>: description of the proompt"
 	echo -e "	--tags <tags>: tags associated with the proompt, repeatable"
 	echo -e "	--template-content <template-content>: content for the template file"
+	echo -e "	--set-var <set-var>: name to set a variable for the template, repeatable"
+	echo -e "	--set-var-value <set-var-value>: value of the corresponding set-var, repeatable"
 	echo -e "Usage :
-	$0 <name> [--template-file <value>] [--description <value>] [--tags <value>] [--template-content <value>]";
+	$0 <name> [--template-file <value>] [--description <value>] [--tags <value>] [--template-content <value>] [--set-var <value>] [--set-var-value <value>]";
 	fi
 
 }
@@ -142,6 +148,24 @@ parse_commandline()
 				_arg_template_content="${_key##--template-content=}"
 				;;
 			
+			--set-var)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_set_var+=("$2")
+				shift
+				;;
+			--set-var=*)
+				_arg_set_var+=("${_key##--set-var=}")
+				;;
+			
+			--set-var-value)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_set_var_value+=("$2")
+				shift
+				;;
+			--set-var-value=*)
+				_arg_set_var_value+=("${_key##--set-var-value=}")
+				;;
+			
 			-h|--help)
 				print_help;
 				exit 0;
@@ -215,6 +239,8 @@ print_debug()
 	echo -e "	description: ${_arg_description}";
 	echo -e "	tags: ${_arg_tags[*]}";
 	echo -e "	template-content: ${_arg_template_content}";
+	echo -e "	set-var: ${_arg_set_var[*]}";
+	echo -e "	set-var-value: ${_arg_set_var_value[*]}";
 
 }
 
@@ -276,19 +302,25 @@ fi
 echo "# Proompt: $_arg_name" > "$proompt_file"
 echo "proompt_template=$_arg_template_file" >> "$proompt_file"
 
-# Add optional description
-if [ -n "$_arg_description" ]; then
-  echo "proompt_description='$_arg_description'" >> "$proompt_file"
+# Add description
+if [ "$_arg_description" = "" ]; then
+	_arg_description="$_arg_name";
 fi
+echo "proompt_description='$_arg_description'" >> "$proompt_file"
 
-# Add tags if provided
-if [ "${#_arg_tags[@]}" -gt 0 ]; then
-	_tags_str=""
-	for tag in "${_arg_tags[@]}"; do
-		_tags_str+=" \"$tag\"";
-	done
-	echo "proompt_tags=($_tags_str)" >> "$proompt_file";
-fi
+# Add tags
+_tags_str=""
+for tag in "${_arg_tags[@]}"; do
+	_tags_str+=" \"$tag\"";
+done
+echo "proompt_tags=($_tags_str)" >> "$proompt_file";
+
+echo "declare -A proompt_vars=()" >> "$proompt_file";
+
+# Add default variables
+for var in "${!_arg_set_var[@]}"; do
+	echo "proompt_vars[\"${_arg_set_var[$var]}\"]=\"${_arg_set_var_value[$var]}\"" >> "$proompt_file";
+done
 
 # Add optional template content
 if [ "$_arg_template_content" != "" ]; then

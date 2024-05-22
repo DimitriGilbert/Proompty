@@ -1,10 +1,11 @@
 #!/bin/bash
 # @parseArger-begin
-# @parseArger-help "A dumb assistant for organized Proompt inge-near" --option "help" --short-option "h"
+# @parseArger-help "set default variables values for a proompt" --option "help" --short-option "h"
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
-# @parseArger-leftovers leftovers
 # @parseArger-declarations
-# @parseArger pos target "Proompty subcommand" --subcommand-directory "bin" --subcommand-run --subcommand-use-leftovers --subcommand --one-of "add" --one-of "get" --one-of "list" --one-of "remove" --one-of "set"
+# @parseArger pos proompt-name "variable proompt name"
+# @parseArger pos name "variable name"
+# @parseArger pos value "variable value"
 # @parseArger-declarations-end
 
 # @parseArger-utils
@@ -35,15 +36,12 @@ begins_with_short_option()
 # POSITIONALS ARGUMENTS
 _positionals=();
 _optional_positionals=();
-_arg_target="";
-_one_of_arg_target=("add" "get" "list" "remove" "add" "set" );
-_arg_subcommand_arg="_arg_target";
-__subcommand=();
+_arg_proompt_name="";
+_arg_name="";
+_arg_value="";
 # OPTIONALS ARGUMENTS
 # FLAGS
 # NESTED
-# LEFTOVERS
-_arg_leftovers=()
 _verbose_level="0";
 
 
@@ -52,24 +50,15 @@ print_help()
 {
 	_triggerSCHelp=1;
 
-	if [ "$__cli_arg_count" -ge 2 ]; then
-		# echo "$0 sub command help
-	#"
-		_triggerSCHelp=0;
-		_helpHasBeenPrinted=0;
-	else
-	
-
 	if [[ "$_helpHasBeenPrinted" == "1" ]]; then
 		_helpHasBeenPrinted=0;
-		echo -e "A dumb assistant for organized Proompt inge-near:"
-	echo -e "	target: Proompty subcommand [one of 'add' 'get' 'list' 'remove' 'add' 'set']"
+		echo -e "set default variables values for a proompt:"
+	echo -e "	proompt-name: variable proompt name"
+	echo -e "	name: variable name"
+	echo -e "	value: variable value"
 	echo -e "Usage :
-	$0 <target>";
+	$0 <proompt-name> <name> <value>";
 	fi
-
-	fi
-	
 
 }
 
@@ -113,9 +102,11 @@ parse_commandline()
 		case "$_key" in
 			-h|--help)
 				print_help;
+				exit 0;
 				;;
 			-h*)
 				print_help;
+				exit 0;
 				;;
 			--verbose)
 					if [ $# -lt 2 ];then
@@ -147,9 +138,12 @@ parse_commandline()
 
 handle_passed_args_count()
 {
-	local _required_args_string="target"
-	if [ "${_positionals_count}" -lt 1 ] && [ "$_helpHasBeenPrinted" == "1" ];then
-		_PRINT_HELP=yes die "FATAL ERROR: Not enough positional arguments - we require at least 1 (namely: $_required_args_string), but got only ${_positionals_count}.
+	local _required_args_string="proompt-name name value"
+	if [ "${_positionals_count}" -gt 3 ] && [ "$_helpHasBeenPrinted" == "1" ];then
+		_PRINT_HELP=yes die "FATAL ERROR: There were spurious positional arguments --- we expect at most 3 (namely: $_required_args_string), but got ${_positionals_count} (the last one was: '${_last_positional}').\n\t${_positionals[*]}" 1
+	fi
+	if [ "${_positionals_count}" -lt 3 ] && [ "$_helpHasBeenPrinted" == "1" ];then
+		_PRINT_HELP=yes die "FATAL ERROR: Not enough positional arguments - we require at least 3 (namely: $_required_args_string), but got only ${_positionals_count}.
 	${_positionals[*]}" 1;
 	fi
 }
@@ -158,32 +152,11 @@ handle_passed_args_count()
 assign_positional_args()
 {
 	local _positional_name _shift_for=$1;
-	_positional_names="_arg_target ";
-	_leftovers_count=$((${#_positionals[@]} - 1))
-	for ((ii = 0; ii < _leftovers_count; ii++));do
-		_positional_names="$_positional_names _arg_leftovers[$((ii + 0))]";
-	done
-
+	_positional_names="_arg_proompt_name _arg_name _arg_value ";
 	shift "$_shift_for"
 	for _positional_name in ${_positional_names};do
 		test $# -gt 0 || break;
-		if ! [[ "$_positional_name" =~ "_arg_leftovers" ]];then
-			eval "if [ \"\$_one_of${_positional_name}\" != \"\" ];then [[ \"\${_one_of${_positional_name}[*]}\" =~ \"\${1}\" ]];fi" || die "${_positional_name} must be one of: $(eval "echo \"\${_one_of${_positional_name}[*]}\"")" 1;
-			
-			if [ "$_arg_subcommand_arg" == "$_positional_name" ];then
-				if [ -f "bin/${1}" ] && command -v "bin/${1}" &>/dev/null;then
-					__subcommand+=("bin/${1}");
-				elif [ -f "$_SCRIPT_DIR/bin/${1}" ] && command -v "$_SCRIPT_DIR/bin/${1}";then
-					__subcommand+=("$_SCRIPT_DIR/bin/${1}");
-				elif [[ "bin/" == $(basename "$_SCRIPT_DIR")* ]];then
-					cmdToSub="$(basename "$_SCRIPT_DIR")";
-					cmdsubDir="bin/";
-					__subcommand+=("$_SCRIPT_DIR${cmdsubDir#"${cmdToSub}"}${1}");
-				else
-					__subcommand+=("$_SCRIPT_DIR/bin/${1}");
-				fi
-			fi
-		fi
+		eval "if [ \"\$_one_of${_positional_name}\" != \"\" ];then [[ \"\${_one_of${_positional_name}[*]}\" =~ \"\${1}\" ]];fi" || die "${_positional_name} must be one of: $(eval "echo \"\${_one_of${_positional_name}[*]}\"")" 1;
 		eval "$_positional_name=\${1}" || die "Error during argument parsing, possibly an ParseArger bug." 1;
 		shift;
 	done
@@ -195,8 +168,9 @@ print_debug()
 	# shellcheck disable=SC2145
 	echo "DEBUG: $0 $@";
 	
-	echo -e "	target: ${_arg_target}";
-	echo -e "	leftovers: ${_arg_leftovers[*]}";
+	echo -e "	proompt-name: ${_arg_proompt_name}";
+	echo -e "	name: ${_arg_name}";
+	echo -e "	value: ${_arg_value}";
 
 }
 
@@ -212,15 +186,17 @@ assign_positional_args 1 "${_positionals[@]}";
 trap on_interrupt INT;
 
 
-__subcommand+=("${_arg_leftovers[@]}");
-if [ "$_triggerSCHelp" == "0" ];then
-	__subcommand+=("--help");
-fi
-if [ "$_verbose_level" -ne "0" ];then
-	__subcommand+=("--verbose" "$_verbose_level");
-fi
-"${__subcommand[@]}";
 
 # @parseArger-parsing-end
 # print_debug "$@"
 # @parseArger-end
+
+# Check if the proompt exists, die if not
+proompt_file="$_SCRIPT_DIR/../proomplates/$_arg_proompt_name"
+if [ ! -f "$proompt_file" ]; then
+  die "Proompt $_arg_proompt_name does not exist."
+fi
+
+# Update the proompt file concatenating the new variables
+echo -e "\nproompt_vars[\"$_arg_name\"]=\"$_arg_value\"" >> "$proompt_file"
+
