@@ -267,6 +267,12 @@ if [ -f "$proompt_file" ]; then
   die "Proompt $_arg_name already exists."
 fi
 
+proompt_dir="$(dirname "$proompt_file")";
+# Check if the proompt directory exsits
+if [ ! -d "$proompt_dir" ]; then
+	mkdir -p "$proompt_dir"
+fi
+
 if [ "$_arg_template_file" = "" ]; then
 	_arg_template_file="$_arg_name";
 fi
@@ -300,7 +306,9 @@ fi
 
 # Create a new proompt file
 echo "# Proompt: $_arg_name" > "$proompt_file"
-echo "proompt_template=$_arg_template_file" >> "$proompt_file"
+# remove $_SCRIPT_DIR/../templates/
+
+echo "proompt_template=${_arg_template_file#"$_SCRIPT_DIR/../templates/"}" >> "$proompt_file"
 
 # Add description
 if [ "$_arg_description" = "" ]; then

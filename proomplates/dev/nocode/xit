@@ -1,0 +1,6 @@
+# Proompt: dev/nocode/xit
+proompt_template=dev/nocode/xit
+proompt_description='layout plan using Xit'
+proompt_tags=()
+declare -A proompt_vars=()
+proompt_vars["task"]="..."

@@ -1,0 +1,7 @@
+# Proompt: use/code/library
+proompt_template="use/code/library"
+proompt_description='use a code library'
+proompt_tags=()
+declare -A proompt_vars=()
+proompt_vars["library_name"]="parseArger"
+proompt_vars["library_repo"]="https://github.com/DimitriGilbert/parseArger"

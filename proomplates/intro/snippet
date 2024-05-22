@@ -1,5 +1,5 @@
 # Proompt: intro/snippet
-proompt_template=/home/didi/worskpace/Code/Proompty/bin/../templates/intro/snippet/simple
+proompt_template=intro/snippet/simple
 proompt_description='intro/snippet'
 proompt_tags=()
 declare -A proompt_vars=()
