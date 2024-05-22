@@ -7,6 +7,7 @@
 # @parseArger opt template-file "template file for the proompt"
 # @parseArger opt description "description of the proompt"
 # @parseArger opt tags "tags associated with the proompt" --repeat
+# @parseArger opt template-content "content for the template file"
 # @parseArger-declarations-end
 
 # @parseArger-utils
@@ -42,6 +43,7 @@ _arg_name="";
 _arg_template_file=
 _arg_description=
 _arg_tags=()
+_arg_template_content=
 # FLAGS
 # NESTED
 _verbose_level="0";
@@ -59,8 +61,9 @@ print_help()
 	echo -e "	--template-file <template-file>: template file for the proompt"
 	echo -e "	--description <description>: description of the proompt"
 	echo -e "	--tags <tags>: tags associated with the proompt, repeatable"
+	echo -e "	--template-content <template-content>: content for the template file"
 	echo -e "Usage :
-	$0 <name> [--template-file <value>] [--description <value>] [--tags <value>]";
+	$0 <name> [--template-file <value>] [--description <value>] [--tags <value>] [--template-content <value>]";
 	fi
 
 }
@@ -128,6 +131,15 @@ parse_commandline()
 				;;
 			--tags=*)
 				_arg_tags+=("${_key##--tags=}")
+				;;
+			
+			--template-content)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_template_content="$2"
+				shift
+				;;
+			--template-content=*)
+				_arg_template_content="${_key##--template-content=}"
 				;;
 			
 			-h|--help)
@@ -202,6 +214,7 @@ print_debug()
 	echo -e "	template-file: ${_arg_template_file}";
 	echo -e "	description: ${_arg_description}";
 	echo -e "	tags: ${_arg_tags[*]}";
+	echo -e "	template-content: ${_arg_template_content}";
 
 }
 
@@ -276,6 +289,11 @@ if [ "${#_arg_tags[@]}" -gt 0 ]; then
 		_tags_str+=" \"$tag\"";
 	done
 	echo "proompt_tags=($_tags_str)" >> "$proompt_file";
+fi
+
+# Add optional template content
+if [ "$_arg_template_content" != "" ]; then
+  echo "$_arg_template_content" >> "$_arg_template_file"
 fi
 
 echo "Proompt $_arg_name has been added."
