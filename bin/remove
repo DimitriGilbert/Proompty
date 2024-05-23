@@ -185,7 +185,7 @@ trap on_interrupt INT;
 source "$_SCRIPT_DIR/common";
 
 # Check if the proompt exists
-proompt_file="$_SCRIPT_DIR/../proomplates/$_arg_name"
+proompt_file="$(get_proompt_file "$_arg_name")"
 if [ ! -f "$proompt_file" ]; then
   die "Proompt $_arg_name does not exists."
 fi
