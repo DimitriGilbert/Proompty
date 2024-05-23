@@ -29,27 +29,27 @@ _Proompty_completions() {
 
   case "$compline" in
     'get'*'--prefix-mod')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')")" -- "$cur" )
       ;;
 
     'get'*'--suffix-mod')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')")" -- "$cur" )
       ;;
 
     'get'*'--prefix')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')")" -- "$cur" )
       ;;
 
     'get'*'--suffix')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')")" -- "$cur" )
       ;;
 
     'get'*'--pm')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')")" -- "$cur" )
       ;;
 
     'get'*'--sm')
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')")" -- "$cur" )
       ;;
 
     'remove'*)
@@ -65,7 +65,7 @@ _Proompty_completions() {
       ;;
 
     'get'*)
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|''$PROOMPTY_DIR/proomplates/||g') --template-file --prefix-mod --prefix --pm -p --suffix-mod --suffix --sm -s --append --clip --no-clip --output --no-output")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g') --template-file --prefix-mod --prefix --pm -p --suffix-mod --suffix --sm -s --append --clip --no-clip --output --no-output")" -- "$cur" )
       ;;
 
     'set'*)

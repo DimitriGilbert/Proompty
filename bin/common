@@ -1,0 +1,71 @@
+
+function select_random_file() {
+  local dir="$1"
+
+  # Validate the input directory
+  if [[ ! -d "$dir" ]]; then
+    echo "Error: '$dir' is not a directory."
+    return 1
+  fi
+
+  local entries=("$dir"/*)
+  local entry
+
+  # Handle empty directory
+  if [[ ${#entries[@]} -eq 0 ]]; then
+    echo "Error: '$dir' is empty."
+    return 1
+  fi
+
+  while true; do
+    entry="${entries[RANDOM % ${#entries[@]}]}"
+
+    if [[ -d "$entry" ]]; then
+      entries=("$entry"/*)
+
+      # Handle empty subdirectory
+      if [[ ${#entries[@]} -eq 0 ]]; then
+        echo "Error: Subdirectory '$entry' is empty."
+        return 1
+      fi
+    elif [[ -f "$entry" ]]; then
+      echo "$entry"
+      return 0
+    fi
+  done
+}
+
+#  combine get_proompt and get_template _file
+function get_proompty_file() {
+  local file="$1"
+  local type="$2"
+  if [[ ! "$file" =~ ^/ ]]; then
+    pos="$PROOMPTY_CONFIG_DIR/$type/$1";
+    pos2="$PROOMPTY_DIR/$type/$1";
+    if [ -f "$pos" ] && [ -d "$pos" ]; then
+      file="$pos";
+    elif [ -f "$pos2" ] || [ -d "$pos2" ]; then
+      file="$pos2";
+    else
+      die "File $1 does not exist"
+    fi
+  fi
+  # if mod is a directory, select a file inside randomly
+  if [ -d "$file" ]; then
+    # mod="$mod/$(ls "$mod" | shuf -n 1)"
+    file=$(select_random_file "$file");
+  fi
+  echo "$file";
+}
+
+function get_mod() {
+	cat "$(get_proompty_file "$1" "mods")";
+}
+
+function get_proompt_file() {
+  get_proompty_file "$1" proomplates;
+}
+
+function get_template_file() {
+  get_proompty_file "$1" templates;
+}

@@ -191,11 +191,13 @@ trap on_interrupt INT;
 # @parseArger-parsing-end
 # print_debug "$@"
 # @parseArger-end
+source "$_SCRIPT_DIR/common";
 
 # Retrieve list of proompts from the proomplates directory
-_base_proompt_dir="$_SCRIPT_DIR/../proomplates"
+_base_proompt_dir="$$PROOMPTY_CONFIG_DIR/proomplates"
 _proompt_dir="$_base_proompt_dir"
 
+out=""
 
 if [ "$_arg_prompt_dir" != "" ]; then
 	if [[ "$_arg_prompt_dir" == "/"* ]]; then
@@ -203,6 +205,8 @@ if [ "$_arg_prompt_dir" != "" ]; then
 	else
 		_proompt_dir="$_proompt_dir/$_arg_prompt_dir"
 	fi
+else
+	out+="$(./Proompty list --prompt-dir "$PROOMPTY_DIR/proomplates")\n"
 fi
 
 proompts=()
@@ -216,10 +220,11 @@ for file in "$_proompt_dir"/*; do
   fi
 done
 
-out=""
 for proompt in "${proompts[@]}"; do
 	if [[ "$proompt" == "$_base_proompt_dir/"* ]]; then
 		pout="${proompt#"$_base_proompt_dir/"}"
+	elif [[ "$proompt" == "$PROOMPTY_DIR/proomplates/"* ]]; then
+		pout="${proompt#"$PROOMPTY_DIR/proomplates/"}"
 	else
 		pout="$proompt"
 	fi

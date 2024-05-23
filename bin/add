@@ -299,8 +299,10 @@ trap on_interrupt INT;
 # print_debug "$@"
 # @parseArger-end
 
+source "$_SCRIPT_DIR/common";
+
 # Check if a proompt with the same name already exists
-proompt_file="$_SCRIPT_DIR/../proomplates/$_arg_name"
+proompt_file="$PROOMPTY_CONFIG_DIR/proomplates/$_arg_name"
 if [ -f "$proompt_file" ]; then
   die "Proompt $_arg_name already exists."
 fi
@@ -319,7 +321,7 @@ _tpl_dir="$(dirname "$_arg_template_file")";
 
 # check if $_arg_template_file start with a /
 if [[ ! $_arg_template_file == /* ]]; then
-	_arg_template_file="$_SCRIPT_DIR/../templates/$_arg_template_file"
+	_arg_template_file="$PROOMPTY_CONFIG_DIR/templates/$_arg_template_file"
 	
 	_tpl_dir="$(dirname "$_arg_template_file")";
 
@@ -346,7 +348,7 @@ fi
 echo "# Proompt: $_arg_name" > "$proompt_file"
 # remove $_SCRIPT_DIR/../templates/
 
-echo "proompt_template=${_arg_template_file#"$_SCRIPT_DIR/../templates/"}" >> "$proompt_file"
+echo "proompt_template=${_arg_template_file#"$PROOMPTY_CONFIG_DIR/templates/"}" >> "$proompt_file"
 
 # Add description
 if [ "$_arg_description" = "" ]; then

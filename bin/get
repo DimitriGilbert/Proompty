@@ -295,63 +295,10 @@ trap on_interrupt INT;
 # print_debug "$@"
 # @parseArger-end
 
-select_random_file() {
-  local dir="$1"
-
-  # Validate the input directory
-  if [[ ! -d "$dir" ]]; then
-    echo "Error: '$dir' is not a directory."
-    return 1
-  fi
-
-  local entries=("$dir"/*)
-  local entry
-
-  # Handle empty directory
-  if [[ ${#entries[@]} -eq 0 ]]; then
-    echo "Error: '$dir' is empty."
-    return 1
-  fi
-
-  while true; do
-    entry="${entries[RANDOM % ${#entries[@]}]}"
-
-    if [[ -d "$entry" ]]; then
-      entries=("$entry"/*)
-
-      # Handle empty subdirectory
-      if [[ ${#entries[@]} -eq 0 ]]; then
-        echo "Error: Subdirectory '$entry' is empty."
-        return 1
-      fi
-    elif [[ -f "$entry" ]]; then
-      echo "$entry"
-      return 0
-    fi
-  done
-}
-
-
-get_mod() {
-	local mod="$1"
-	if [[ "$mod" =~ ^/ ]]; then
-		true;
-	else
-		mod="$_SCRIPT_DIR/../mods/$mod";
-	fi
-	if [ ! -f "$mod" ] && [ ! -d "$mod" ]; then
-		die "Mod $mod does not exist."
-	fi
-	# if mod is a directory, select a file inside randomly
-	if [ -d "$mod" ]; then
-		# mod="$mod/$(ls "$mod" | shuf -n 1)"
-		mod=$(select_random_file "$mod");
-	fi
-	cat "$mod";
-}
-
 # Check if the proompt exists, die if not
-proompt_file="$_SCRIPT_DIR/../proomplates/$_arg_name"
+source "$_SCRIPT_DIR/common";
+
+proompt_file="$(get_proompt_file "$_arg_name";)"
 if [ ! -f "$proompt_file" ]; then
   die "Proompt $_arg_name does not exist."
 fi
@@ -368,7 +315,7 @@ fi
 if [[ "$_arg_template_file" =~ ^/ ]]; then
   true;
 else
-  _arg_template_file="$_SCRIPT_DIR/../templates/$_arg_template_file";
+  _arg_template_file="$(get_template_file "$_arg_template_file")";
 fi
 
 # check if _arg_template_file is directory

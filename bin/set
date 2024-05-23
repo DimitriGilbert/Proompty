@@ -190,6 +190,7 @@ trap on_interrupt INT;
 # @parseArger-parsing-end
 # print_debug "$@"
 # @parseArger-end
+source "$_SCRIPT_DIR/common";
 
 # Check if the proompt exists, die if not
 proompt_file="$_SCRIPT_DIR/../proomplates/$_arg_proompt_name"

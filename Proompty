@@ -36,7 +36,7 @@ begins_with_short_option()
 _positionals=();
 _optional_positionals=();
 _arg_target="";
-_one_of_arg_target=("add" "get" "list" "remove" "add" "set" );
+_one_of_arg_target=("add" "get" "list" "remove" "set");
 _arg_subcommand_arg="_arg_target";
 __subcommand=();
 # OPTIONALS ARGUMENTS
@@ -63,7 +63,7 @@ print_help()
 	if [[ "$_helpHasBeenPrinted" == "1" ]]; then
 		_helpHasBeenPrinted=0;
 		echo -e "A dumb assistant for organized Proompt inge-near:"
-	echo -e "	target: Proompty subcommand [one of 'add' 'get' 'list' 'remove' 'add' 'set']"
+	echo -e "	target: Proompty subcommand [one of 'add' 'get' 'list' 'remove' 'set']"
 	echo -e "Usage :
 	$0 <target>";
 	fi
@@ -212,6 +212,7 @@ assign_positional_args 1 "${_positionals[@]}";
 trap on_interrupt INT;
 
 
+source "$_SCRIPT_DIR/Proompty.rc";
 __subcommand+=("${_arg_leftovers[@]}");
 if [ "$_triggerSCHelp" == "0" ];then
 	__subcommand+=("--help");
