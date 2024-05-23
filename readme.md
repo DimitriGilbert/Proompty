@@ -156,6 +156,38 @@ what chatGPT told me :
 ![chatgpt response](content/chatgpt_response_2.png) 
 ...yup !
 
+### less input, more output !
+
+```bash
+./Proompty get dev/starter-project \
+  --lang bash \
+  --project "A simple TODO CLI app called Xitask. It stores tasks lists in Xit format, you can create a list, add remove and cross tasks; each list is a new Xit file." \
+  --append "$(./Proompty get use/code/library \
+    --library_name parseArger \
+    --library_repo "https://github.com/DimitriGilbert/parseArger" \
+    --no-clip \
+  )"
+```
+outputs :
+```
+I have a bash project I am working on and I require some assistance. This is a simple description of my project:
+A simple TODO CLI app called Xitask. It stores tasks lists in Xit format, you can create a list, add remove and cross tasks; each list is a new Xit file.
+Word out is you are fantastic at doing what we want to do ! So I expect the code quality to be fantastic/10, ok ?
+I know I can count on you !
+security is our upmost priority !
+please make sure the provided code meets the highest security standards !
+please add the line numbers in the code output.
+It is very important that you keep the output quantity as low as possible.
+Include only necessary information.
+I will ask if I need more.
+please use parseArger for the next task.
+you can find parseArger repository at this url https://github.com/DimitriGilbert/parseArger.
+make sure that you know where to find the documentation and most importantly, use it !
+```
+After which chatGPT completely hallucinated [this](https://chatgpt.com/share/3f354cf4-4873-4798-90ae-5de294e16978)... I tried helping him though... but miserably failed XD.
+
+You're proompt are only as good as you apparently :P
+
 ## Installation
 
 An installation script is provided
