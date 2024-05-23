@@ -1,0 +1,9 @@
+# Proompt: dev/starter-project
+proompt_template=dev/starter-project
+proompt_description='start a dev project'
+proompt_tags=()
+proompt_prefix_mods=()
+proompt_suffix_mods=( "dev/code/quality/fantastic" "dev/code/security/very" "dev/code/add-line-number" "concise/shutup")
+declare -A proompt_vars=()
+proompt_vars["lang"]="typescript"
+proompt_vars["project"]="<your project description, --project to set>"

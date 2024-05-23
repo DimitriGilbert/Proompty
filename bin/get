@@ -6,8 +6,8 @@
 # @parseArger-declarations
 # @parseArger pos name "proompt name" --complete-custom "find \$PROOMPTY_DIR/proomplates/ -type f | sed 's|''\$PROOMPTY_DIR/proomplates/||g'"
 # @parseArger opt template-file "replace default template file"
-# @parseArger opt prefix-mod "add a mod as prefix" --short p --repeat --alias prefix --alias pm --complete-custom "find /mods/ -type f | sed 's|''/mods/||g'"
-# @parseArger opt suffix-mod "add a mod as suffix" --short s --repeat --alias suffix --alias sm --complete-custom "find /mods/ -type f | sed 's|''/mods/||g'"
+# @parseArger opt prefix-mod "add a mod as prefix" --short p --repeat --alias prefix --alias pm --complete-custom "find \$PROOMPTY_DIR/mods/ -type f | sed 's|''\$PROOMPTY_DIR/mods/||g'"
+# @parseArger opt suffix-mod "add a mod as suffix" --short s --repeat --alias suffix --alias sm --complete-custom "find \$PROOMPTY_DIR/mods/ -type f | sed 's|''\$PROOMPTY_DIR/mods/||g'"
 # @parseArger opt append "append something to the prompt" --repeat
 # @parseArger flag clip "copy to clipboard" --on
 # @parseArger flag output "do you need output" --on
@@ -396,10 +396,12 @@ done
 result=$(envsubst < "$_arg_template_file")
 
 # adding mods
+_arg_prefix_mod=("${_arg_prefix_mod[@]}" "${proompt_prefix_mods[@]}")
 for mod in "${_arg_prefix_mod[@]}"; do
   result="$(get_mod "$mod")\n$result"
 done
 
+_arg_suffix_mod=("${_arg_suffix_mod[@]}" "${proompt_suffix_mods[@]}")
 for mod in "${_arg_suffix_mod[@]}"; do
   result="$result\n$(get_mod "$mod")"
 done

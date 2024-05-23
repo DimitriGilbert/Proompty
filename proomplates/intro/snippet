@@ -2,6 +2,8 @@
 proompt_template=intro/snippet/simple
 proompt_description='intro/snippet'
 proompt_tags=()
+proompt_prefix_mods=()
+proompt_suffix_mods=()
 declare -A proompt_vars=()
 proompt_vars["snippet"]="# your snippet"
 proompt_vars["task"]="..."

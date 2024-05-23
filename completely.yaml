@@ -11,6 +11,12 @@ Proompty add:
 - --template-content
 - --set-var
 - --set-var-value
+- --prefix-mod
+- --prefix
+- --pm
+- --suffix-mod
+- --suffix
+- --sm
 Proompty get:
 - $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|''$PROOMPTY_DIR/proomplates/||g')
 - --template-file
@@ -29,21 +35,21 @@ Proompty get:
 - --no-output
 
 Proompty get*--prefix-mod:
-- $(find /mods/ -type f | sed 's|''/mods/||g')
+- $(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')
 
 Proompty get*--prefix:
-- $(find /mods/ -type f | sed 's|''/mods/||g')
+- $(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')
 
 Proompty get*--pm:
-- $(find /mods/ -type f | sed 's|''/mods/||g')
+- $(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')
 Proompty get*--suffix-mod:
-- $(find /mods/ -type f | sed 's|''/mods/||g')
+- $(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')
 
 Proompty get*--suffix:
-- $(find /mods/ -type f | sed 's|''/mods/||g')
+- $(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')
 
 Proompty get*--sm:
-- $(find /mods/ -type f | sed 's|''/mods/||g')
+- $(find $PROOMPTY_DIR/mods/ -type f | sed 's|''$PROOMPTY_DIR/mods/||g')
 Proompty list:
 - --prompt-dir
 Proompty remove:

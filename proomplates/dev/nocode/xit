@@ -2,5 +2,7 @@
 proompt_template=dev/nocode/xit
 proompt_description='layout plan using Xit'
 proompt_tags=()
+proompt_prefix_mods=()
+proompt_suffix_mods=()
 declare -A proompt_vars=()
 proompt_vars["task"]="..."

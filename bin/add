@@ -10,6 +10,8 @@
 # @parseArger opt template-content "content for the template file"
 # @parseArger opt set-var "name to set a variable for the template" --repeat
 # @parseArger opt set-var-value "value of the corresponding set-var" --repeat
+# @parseArger opt prefix-mod "add default prefix mod to your proompt" --repeat --alias prefix --alias pm
+# @parseArger opt suffix-mod "add default suffix mod to your proompt" --repeat --alias suffix --alias sm
 # @parseArger-declarations-end
 
 # @parseArger-utils
@@ -48,6 +50,8 @@ _arg_tags=()
 _arg_template_content=
 _arg_set_var=()
 _arg_set_var_value=()
+_arg_prefix_mod=()
+_arg_suffix_mod=()
 # FLAGS
 # NESTED
 _verbose_level="0";
@@ -68,8 +72,10 @@ print_help()
 	echo -e "	--template-content <template-content>: content for the template file"
 	echo -e "	--set-var <set-var>: name to set a variable for the template, repeatable"
 	echo -e "	--set-var-value <set-var-value>: value of the corresponding set-var, repeatable"
+	echo -e "	--prefix-mod|--prefix|--pm <prefix-mod>: add default prefix mod to your proompt, repeatable"
+	echo -e "	--suffix-mod|--suffix|--sm <suffix-mod>: add default suffix mod to your proompt, repeatable"
 	echo -e "Usage :
-	$0 <name> [--template-file <value>] [--description <value>] [--tags <value>] [--template-content <value>] [--set-var <value>] [--set-var-value <value>]";
+	$0 <name> [--template-file <value>] [--description <value>] [--tags <value>] [--template-content <value>] [--set-var <value>] [--set-var-value <value>] [--prefix-mod <value>] [--suffix-mod <value>]";
 	fi
 
 }
@@ -166,6 +172,36 @@ parse_commandline()
 				_arg_set_var_value+=("${_key##--set-var-value=}")
 				;;
 			
+			--pm|--prefix|--prefix-mod)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_prefix_mod+=("$2")
+				shift
+				;;
+			--prefix-mod=*)
+				_arg_prefix_mod+=("${_key##--prefix-mod=}")
+				;;
+			--prefix=*)
+				_arg_prefix_mod+=("${_key##--prefix=}")
+				;;
+			--pm=*)
+				_arg_prefix_mod+=("${_key##--pm=}")
+				;;
+			
+			--sm|--suffix|--suffix-mod)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_suffix_mod+=("$2")
+				shift
+				;;
+			--suffix-mod=*)
+				_arg_suffix_mod+=("${_key##--suffix-mod=}")
+				;;
+			--suffix=*)
+				_arg_suffix_mod+=("${_key##--suffix=}")
+				;;
+			--sm=*)
+				_arg_suffix_mod+=("${_key##--sm=}")
+				;;
+			
 			-h|--help)
 				print_help;
 				exit 0;
@@ -241,6 +277,8 @@ print_debug()
 	echo -e "	template-content: ${_arg_template_content}";
 	echo -e "	set-var: ${_arg_set_var[*]}";
 	echo -e "	set-var-value: ${_arg_set_var_value[*]}";
+	echo -e "	prefix-mod: ${_arg_prefix_mod[*]}";
+	echo -e "	suffix-mod: ${_arg_suffix_mod[*]}";
 
 }
 
@@ -323,9 +361,22 @@ for tag in "${_arg_tags[@]}"; do
 done
 echo "proompt_tags=($_tags_str)" >> "$proompt_file";
 
-echo "declare -A proompt_vars=()" >> "$proompt_file";
+# add prefix mods
+_pref_str=""
+for mod in "${_arg_prefix_mod[@]}"; do
+	_pref_str+=" \"$mod\"";
+done
+echo "proompt_prefix_mods=($_pref_str)" >> "$proompt_file";
+
+# add suffix mods
+_suf_str=""
+for mod in "${_arg_suffix_mod[@]}"; do
+	_suf_str+=" \"$mod\"";
+done
+echo "proompt_suffix_mods=($_suf_str)" >> "$proompt_file";
 
 # Add default variables
+echo "declare -A proompt_vars=()" >> "$proompt_file";
 for var in "${!_arg_set_var[@]}"; do
 	echo "proompt_vars[\"${_arg_set_var[$var]}\"]=\"${_arg_set_var_value[$var]}\"" >> "$proompt_file";
 done
