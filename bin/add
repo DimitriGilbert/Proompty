@@ -12,6 +12,7 @@
 # @parseArger opt set-var-value "value of the corresponding set-var" --repeat
 # @parseArger opt prefix-mod "add default prefix mod to your proompt" --repeat --alias prefix --alias pm
 # @parseArger opt suffix-mod "add default suffix mod to your proompt" --repeat --alias suffix --alias sm
+# @parseArger opt proompts "existing proompts to use" --repeat --complete-custom "find \$PROOMPTY_DIR/proomplates/ -type f | sed 's|'\$PROOMPTY_DIR'/proomplates/||g'"
 # @parseArger-declarations-end
 
 # @parseArger-utils
@@ -52,6 +53,7 @@ _arg_set_var=()
 _arg_set_var_value=()
 _arg_prefix_mod=()
 _arg_suffix_mod=()
+_arg_proompts=()
 # FLAGS
 # NESTED
 _verbose_level="0";
@@ -74,8 +76,9 @@ print_help()
 	echo -e "	--set-var-value <set-var-value>: value of the corresponding set-var, repeatable"
 	echo -e "	--prefix-mod|--prefix|--pm <prefix-mod>: add default prefix mod to your proompt, repeatable"
 	echo -e "	--suffix-mod|--suffix|--sm <suffix-mod>: add default suffix mod to your proompt, repeatable"
+	echo -e "	--proompts <proompts>: existing proompts to use, repeatable"
 	echo -e "Usage :
-	$0 <name> [--template-file <value>] [--description <value>] [--tags <value>] [--template-content <value>] [--set-var <value>] [--set-var-value <value>] [--prefix-mod <value>] [--suffix-mod <value>]";
+	$0 <name> [--template-file <value>] [--description <value>] [--tags <value>] [--template-content <value>] [--set-var <value>] [--set-var-value <value>] [--prefix-mod <value>] [--suffix-mod <value>] [--proompts <value>]";
 	fi
 
 }
@@ -202,6 +205,15 @@ parse_commandline()
 				_arg_suffix_mod+=("${_key##--sm=}")
 				;;
 			
+			--proompts)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_proompts+=("$2")
+				shift
+				;;
+			--proompts=*)
+				_arg_proompts+=("${_key##--proompts=}")
+				;;
+			
 			-h|--help)
 				print_help;
 				exit 0;
@@ -279,6 +291,7 @@ print_debug()
 	echo -e "	set-var-value: ${_arg_set_var_value[*]}";
 	echo -e "	prefix-mod: ${_arg_prefix_mod[*]}";
 	echo -e "	suffix-mod: ${_arg_suffix_mod[*]}";
+	echo -e "	proompts: ${_arg_proompts[*]}";
 
 }
 
@@ -376,6 +389,13 @@ for mod in "${_arg_suffix_mod[@]}"; do
 	_suf_str+=" \"$mod\"";
 done
 echo "proompt_suffix_mods=($_suf_str)" >> "$proompt_file";
+
+# add proompts
+_proompts_str=""
+for proompt in "${_arg_proompts[@]}"; do
+	_proompts_str+=" \"$proompt\"";
+done
+echo "proompt_proompts=($_proompts_str)" >> "$proompt_file";
 
 # Add default variables
 echo "declare -A proompt_vars=()" >> "$proompt_file";

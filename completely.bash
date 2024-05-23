@@ -36,6 +36,10 @@ _Proompty_completions() {
       while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')")" -- "$cur" )
       ;;
 
+    'add'*'--proompts')
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR/proomplates/||g')")" -- "$cur" )
+      ;;
+
     'get'*'--prefix')
       while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "$(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')")" -- "$cur" )
       ;;
@@ -61,7 +65,7 @@ _Proompty_completions() {
       ;;
 
     'add'*)
-      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "--template-file --description --tags --template-content --set-var --set-var-value --prefix-mod --prefix --pm --suffix-mod --suffix --sm")" -- "$cur" )
+      while read -r; do COMPREPLY+=( "$REPLY" ); done < <( compgen -W "$(_Proompty_completions_filter "--template-file --description --tags --template-content --set-var --set-var-value --prefix-mod --prefix --pm --suffix-mod --suffix --sm --proompts")" -- "$cur" )
       ;;
 
     'get'*)
