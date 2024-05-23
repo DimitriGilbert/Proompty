@@ -1,0 +1,19 @@
+Extract relevant information from a Markdown file and present it in easily understandable bullet points, including a plan of the document and a really brief summary of each section.
+
+This is the Markdown you will analyze :
+'
+${markdown}
+'
+
+you will provide if available :
+1. **Title**: 
+2. **Author**: 
+3. **Date Created**: 
+4. **Document Plan**:
+   - Please provide a brief overview or outline of the document structure.
+
+5. **Section Summaries**:
+   - For each section, provide a very concise summary.
+
+Feel free to adapt the template as needed.
+

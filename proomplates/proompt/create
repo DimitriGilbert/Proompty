@@ -1,0 +1,8 @@
+# Proompt: proompt/create
+proompt_template=proompt/create
+proompt_description='create a new proompt'
+proompt_tags=()
+proompt_prefix_mods=()
+proompt_suffix_mods=()
+declare -A proompt_vars=()
+proompt_vars["task"]="<what you wanna do ?>"

@@ -1,0 +1,7 @@
+I need some help creating a new prompt for our AI chat.
+As an expert prompt engineer, you will provide me with the most efficient prompt both in term of tokens and meaning conveyed.
+you will answer in the form of text and anything variable should be designated as an expanded bash variable for later use.
+The task for the prompt is the following:
+'
+${task}
+'

@@ -1,0 +1,8 @@
+# Proompt: extract/info/markdown
+proompt_template=extract/info/markdown
+proompt_description='extract/info/markdown'
+proompt_tags=()
+proompt_prefix_mods=()
+proompt_suffix_mods=()
+declare -A proompt_vars=()
+proompt_vars[markdwon]="<your markdown>"
