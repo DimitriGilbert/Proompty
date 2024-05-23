@@ -14,13 +14,9 @@ a single file ? an Obsidian directory perhaps ?
 
 And what ? Copy pasting ? Seriously ??
 
-Maaan this sucks too ! 
+Maaan this sucks too ! Weren't AI suppose to fix *that* stupid grind ? ...
 
-Weren't AI suppose to fix *that* stupid grind ? ...
-
-Well, follow me in going full circle then !
-
-Use a CLI tool to generate your prompts and manage your templates and mods !
+Well, follow me in going full circle then and use a CLI tool to generate your prompts and manage your templates and mods !
 
 Who needs AI when you have autocomplete in your terminal !!?
 
