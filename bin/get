@@ -4,11 +4,12 @@
 # @parseArger-verbose --option "verbose" --level "0" --quiet-option "quiet"
 # @parseArger-leftovers leftovers --parse
 # @parseArger-declarations
-# @parseArger pos name "proompt name" --complete-custom "find \$PROOMPTY_DIR/proomplates/ -type f | sed 's|'\$PROOMPTY_DIR'/proomplates/||g'"
+# @parseArger pos name "proompt name" --complete-custom "find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g'"
 # @parseArger opt template-file "replace default template file"
-# @parseArger opt prefix-mod "add a mod as prefix" --short p --repeat --alias prefix --alias pm --complete-custom "find \$PROOMPTY_DIR/mods/ -type f | sed 's|'\$PROOMPTY_DIR'/mods/||g'"
-# @parseArger opt suffix-mod "add a mod as suffix" --short s --repeat --alias suffix --alias sm --complete-custom "find \$PROOMPTY_DIR/mods/ -type f | sed 's|'\$PROOMPTY_DIR'/mods/||g'"
+# @parseArger opt prefix-mod "add a mod as prefix" --short p --repeat --alias prefix --alias pm --complete-custom "find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g'"
+# @parseArger opt suffix-mod "add a mod as suffix" --short s --repeat --alias suffix --alias sm --complete-custom "find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g'"
 # @parseArger opt append "append something to the prompt" --repeat
+# @parseArger opt proompts "add a proompt, in a proompt, in a proompt, in a..." --repeat --complete-custom "find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g'"
 # @parseArger flag clip "copy to clipboard" --on
 # @parseArger flag output "do you need output" --on
 # @parseArger-declarations-end
@@ -47,6 +48,7 @@ _arg_template_file=
 _arg_prefix_mod=()
 _arg_suffix_mod=()
 _arg_append=()
+_arg_proompts=()
 # FLAGS
 _arg_clip="on"
 _arg_output="on"
@@ -71,10 +73,11 @@ print_help()
 	echo -e "	-p, --prefix-mod|--prefix|--pm <prefix-mod>: add a mod as prefix, repeatable"
 	echo -e "	-s, --suffix-mod|--suffix|--sm <suffix-mod>: add a mod as suffix, repeatable"
 	echo -e "	--append <append>: append something to the prompt, repeatable"
+	echo -e "	--proompts <proompts>: add a proompt, in a proompt, in a proompt, in a..., repeatable"
 	echo -e "	--clip|--no-clip: copy to clipboard, on by default (use --no-clip to turn it off)"
 	echo -e "	--output|--no-output: do you need output, on by default (use --no-output to turn it off)"
 	echo -e "Usage :
-	$0 <name> [--template-file <value>] [--prefix-mod <value>] [--suffix-mod <value>] [--append <value>] [--[no-]clip] [--[no-]output]";
+	$0 <name> [--template-file <value>] [--prefix-mod <value>] [--suffix-mod <value>] [--append <value>] [--proompts <value>] [--[no-]clip] [--[no-]output]";
 	fi
 
 }
@@ -169,6 +172,15 @@ parse_commandline()
 				;;
 			--append=*)
 				_arg_append+=("${_key##--append=}")
+				;;
+			
+			--proompts)
+				test $# -lt 2 && die "Missing value for the option: '$_key'" 1
+				_arg_proompts+=("$2")
+				shift
+				;;
+			--proompts=*)
+				_arg_proompts+=("${_key##--proompts=}")
 				;;
 			
 			--clip)
@@ -272,6 +284,7 @@ print_debug()
 	echo -e "	prefix-mod: ${_arg_prefix_mod[*]}";
 	echo -e "	suffix-mod: ${_arg_suffix_mod[*]}";
 	echo -e "	append: ${_arg_append[*]}";
+	echo -e "	proompts: ${_arg_proompts[*]}";
 	echo -e "	clip: ${_arg_clip}";
 	echo -e "	output: ${_arg_output}";
 	echo -e "	leftovers: ${_arg_leftovers[*]}";
@@ -347,6 +360,11 @@ result=$(envsubst < "$_arg_template_file")
 # use $proompt_proompts to create the prompt
 prout_cmd=("$_SCRIPT_DIR/../Proompty" get);
 for proompt in "${proompt_proompts[@]}"; do
+	tcmd=("${prout_cmd[@]}" "$proompt" "${prout_args[@]}" --no-clip);
+	result+="\n\n$("${tcmd[@]}")";
+done
+# use _arg_prompts to create the prompt
+for proompt in "${_arg_proompts[@]}"; do
 	tcmd=("${prout_cmd[@]}" "$proompt" "${prout_args[@]}" --no-clip);
 	result+="\n\n$("${tcmd[@]}")";
 done
