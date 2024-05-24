@@ -35,6 +35,18 @@ function select_random_file() {
   done
 }
 
+function list_proompty_files() {
+  local type="$1"
+  local dir="$PROOMPTY_DIR/$type"
+  if [ -d "$dir" ]; then
+    find "$dir/" -type f | sed 's|'"$dir"'/||g'
+  fi
+  dir="$PROOMPTY_CONFIG_DIR/$type"
+  if [ -d "$dir" ]; then
+    find "$dir/" -type f | sed 's|'"$dir"'/||g'
+  fi
+}
+
 #  combine get_proompt and get_template _file
 function get_proompty_file() {
   local file="$1"

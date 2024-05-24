@@ -12,7 +12,7 @@
 # @parseArger opt set-var-value "value of the corresponding set-var" --repeat
 # @parseArger opt prefix-mod "add default prefix mod to your proompt" --repeat --alias prefix --alias pm
 # @parseArger opt suffix-mod "add default suffix mod to your proompt" --repeat --alias suffix --alias sm
-# @parseArger opt proompts "existing proompts to use" --repeat --complete-custom "find \$PROOMPTY_DIR/proomplates/ -type f | sed 's|'\$PROOMPTY_DIR'/proomplates/||g'"
+# @parseArger opt proompts "existing proompts to use" --repeat --complete-custom "list_proompty_files proomplates"
 # @parseArger-declarations-end
 
 # @parseArger-utils
