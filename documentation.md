@@ -1,15 +1,16 @@
-# Usage
+## Usage
 
-## Proompty
+### Proompty
 
 ```
 A dumb assistant for organized Proompt inge-near:
-	target: Proompty subcommand [one of 'add' 'get' 'list' 'remove' 'add' 'set']
+	target: Proompty subcommand \
+		[one of 'add' 'get' 'list' 'remove' 'set']
 Usage :
 	Proompty <target>
 ```
 
-## Proompty add
+### Proompty add
 
 ```
 add a new proompt:
@@ -20,11 +21,23 @@ add a new proompt:
 	--template-content <template-content>: content for the template file
 	--set-var <set-var>: name to set a variable for the template, repeatable
 	--set-var-value <set-var-value>: value of the corresponding set-var, repeatable
+	--prefix-mod|--prefix|--pm <prefix-mod>: add default prefix mod to your proompt, repeatable
+	--suffix-mod|--suffix|--sm <suffix-mod>: add default suffix mod to your proompt, repeatable
+	--proompts <proompts>: existing proompts to use, repeatable
 Usage :
-	Proompty add <name> [--template-file <value>] [--description <value>] [--tags <value>] [--template-content <value>] [--set-var <value>] [--set-var-value <value>]
+	Proompty add <name> \
+		[--template-file <value>] \
+		[--description <value>] \
+		[--tags <value>] \
+		[--template-content <value>] \
+		[--set-var <value>] \
+		[--set-var-value <value>] \
+		[--prefix-mod <value>] \
+		[--suffix-mod <value>] \
+		[--proompts <value>]
 ```
 
-## Proompty get
+### Proompty get
 
 ```
 get a proompt:
@@ -32,22 +45,32 @@ get a proompt:
 	--template-file <template-file>: replace default template file
 	-p, --prefix-mod|--prefix|--pm <prefix-mod>: add a mod as prefix, repeatable
 	-s, --suffix-mod|--suffix|--sm <suffix-mod>: add a mod as suffix, repeatable
+	--append <append>: append something to the prompt, repeatable
+	--proompts <proompts>: add a proompt, in a proompt, in a proompt, in a..., repeatable
 	--clip|--no-clip: copy to clipboard, on by default (use --no-clip to turn it off)
 	--output|--no-output: do you need output, on by default (use --no-output to turn it off)
 Usage :
-	Proompty get <name> [--template-file <value>] [--prefix-mod <value>] [--suffix-mod <value>] [--[no-]clip] [--[no-]output]
+	Proompty get <name> \
+		[--template-file <value>] \
+		[--prefix-mod <value>] \
+		[--suffix-mod <value>] \
+		[--append <value>] \
+		[--proompts <value>] \
+		[--[no-]clip] \
+		[--[no-]output]
 ```
 
-## Proompty list
+### Proompty list
 
 ```
 list proompts:
 	--prompt-dir <prompt-dir>: base directory for listing
 Usage :
-	Proompty list [--prompt-dir <value>]
+	Proompty list \
+		[--prompt-dir <value>]
 ```
 
-## Proompty remove
+### Proompty remove
 
 ```
 remove a proompt:
@@ -56,7 +79,7 @@ Usage :
 	Proompty remove <name>
 ```
 
-## Proompty set
+### Proompty set
 
 ```
 set default variables values for a proompt:
