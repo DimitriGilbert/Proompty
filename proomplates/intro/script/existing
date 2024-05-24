@@ -4,5 +4,6 @@ proompt_description='ask LLM to help you on an existing script'
 proompt_tags=( "code" "script")
 proompt_prefix_mods=()
 proompt_suffix_mods=()
+proompt_proompts=()
 declare -A proompt_vars=()
 proompt_vars["script"]="# your script here"

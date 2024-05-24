@@ -347,8 +347,8 @@ result=$(envsubst < "$_arg_template_file")
 # use $proompt_proompts to create the prompt
 prout_cmd=("$_SCRIPT_DIR/../Proompty" get);
 for proompt in "${proompt_proompts[@]}"; do
-	tcmd=("${prout_cmd[@]}" "$proompt" "${prout_args[@]}");
-	result+="$("${tcmd[@]}")";
+	tcmd=("${prout_cmd[@]}" "$proompt" "${prout_args[@]}" --no-clip);
+	result+="\n\n$("${tcmd[@]}")";
 done
 
 # adding mods
@@ -359,7 +359,7 @@ done
 
 _arg_suffix_mod=("${_arg_suffix_mod[@]}" "${proompt_suffix_mods[@]}")
 for mod in "${_arg_suffix_mod[@]}"; do
-  result="$result\n$(get_mod "$mod")"
+  result="$result\n\n$(get_mod "$mod")"
 done
 
 # append _arg_append
