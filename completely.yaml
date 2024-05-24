@@ -27,7 +27,7 @@ Proompty add:
 
 
 Proompty add*--proompts:
-- $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR/proomplates/||g')
+- $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')
 Proompty get:
 - $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')
 - --template-file
@@ -40,6 +40,7 @@ Proompty get:
 - --sm
 - -s
 - --append
+- --proompts
 - --clip
 - --no-clip
 - --output
@@ -61,6 +62,9 @@ Proompty get*--suffix:
 
 Proompty get*--sm:
 - $(find $PROOMPTY_DIR/mods/ -type f | sed 's|'$PROOMPTY_DIR'/mods/||g')
+
+Proompty get*--proompts:
+- $(find $PROOMPTY_DIR/proomplates/ -type f | sed 's|'$PROOMPTY_DIR'/proomplates/||g')
 Proompty list:
 - --prompt-dir
 Proompty remove:
